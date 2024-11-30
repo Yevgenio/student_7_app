@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:accordion/accordion.dart';
 import '../services/chat_service.dart';
-import 'chat_group_detail_screen.dart';
+import 'chat_details_screen.dart';
 
 class ChatGroupsScreen extends StatefulWidget {
   @override

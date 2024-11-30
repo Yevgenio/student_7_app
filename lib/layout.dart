@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'chat/chat_groups_screen.dart';
-import 'deals_screen.dart';
+import 'chat/chat_list_screen.dart';
+import 'deal/deal_list_screen.dart';
 import 'home_screen.dart';
 import 'profile_screen.dart';
 import 'search_screen.dart';

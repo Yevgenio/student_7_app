@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'services/deal_service.dart';
+import '../services/deal_service.dart';
 
 class DealDetailsScreen extends StatefulWidget {
   final String dealId;
