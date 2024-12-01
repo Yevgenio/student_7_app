@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'home_screen.dart'; 
-import 'layout.dart'; 
+import 'screens/home/home_screen.dart'; 
+import 'screens/layout.dart'; 
+import 'screens/user/user_signup_screen.dart';
+import 'screens/user/user_login_screen.dart';
+import 'screens/user/user_profile_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized(); // Initialize plugins
   runApp(MyApp());
 }
 

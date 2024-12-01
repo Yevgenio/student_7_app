@@ -40,7 +40,7 @@ dependencies:
   accordion: ^2.6.0
   flutter_localizations:
     sdk: flutter
-  curved_navigation_bar: ^1.0.6
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:

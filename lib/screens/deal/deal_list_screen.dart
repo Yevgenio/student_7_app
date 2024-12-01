@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/deal_service.dart';
+import '../../services/deal_service.dart';
 import 'deal_details_screen.dart';
 
 class DealsScreen extends StatefulWidget {
@@ -81,7 +81,7 @@ class _DealsScreenState extends State<DealsScreen> {
                           itemBuilder: (context, index) {
                             final deal = deals[index];
                             return DealCard(
-                              imageUrl: deal['imageUrl'] ?? '',
+                              imageUrl: deal['imagePath'] ?? '',
                               name: deal['name'] ?? '',
                               description: deal['description'] ?? '',
                               onTap: () {

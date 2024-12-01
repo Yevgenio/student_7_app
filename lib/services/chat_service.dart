@@ -1,24 +1,39 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../config.dart';
 
 class ChatService {
-  final String baseUrl = 'http://51.84.9.120:5000/api'; // Replace with your actual IP
+  final String baseUrl = '${Config.apiBaseUrl}/api/chats';
+  final String uploadUrl = '${Config.apiBaseUrl}/api/uploads';
 
   Future<List<dynamic>> fetchChats() async {
-    final response = await http.get(Uri.parse('$baseUrl/chats'));
+    final response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
-      return json.decode(response.body);  // Decode JSON data into a list
+      final data = jsonDecode(response.body);
+      // Update image paths to include the full API URL
+      for (var item in data) {
+        if (item['imagePath'] != null) {
+          item['imagePath'] = '$uploadUrl/${item['imagePath']}';
+        }
+      }
+      return data;
     } else {
-      throw Exception('Failed to load chats');
+      throw Exception('Failed to load chat');
     }
   }
 
   Future<Map<String, dynamic>> fetchChatById(String id) async {
-    final response = await http.get(Uri.parse('$baseUrl/chats/id/$id'));
+    final response = await http.get(Uri.parse('$baseUrl/id/$id'));
     if (response.statusCode == 200) {
-      return json.decode(response.body);  // Decode JSON data for a specific chat
+      final data = jsonDecode(response.body);
+      // Update image paths to include the full API URL
+      if (data['imagePath'] != null) {
+        data['imagePath'] = '$uploadUrl/${data['imagePath']}';
+      }
+      return data;
     } else {
       throw Exception('Failed to load this chat');
     }
   }
 }
+

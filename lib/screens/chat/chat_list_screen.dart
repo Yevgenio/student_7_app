@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:accordion/accordion.dart';
-import '../services/chat_service.dart';
+import '../../services/chat_service.dart';
 import 'chat_details_screen.dart';
 
 class ChatGroupsScreen extends StatefulWidget {
@@ -26,7 +26,7 @@ class _ChatGroupsScreenState extends State<ChatGroupsScreen> {
       // Group data by category
       Map<String, List<dynamic>> groupedData = {};
       for (var group in data) {
-        String category = group['category'] ?? 'General';
+        String category = group['category'] ?? 'כללי';
         if (!groupedData.containsKey(category)) {
           groupedData[category] = [];
         }
@@ -76,17 +76,16 @@ class _ChatGroupsScreenState extends State<ChatGroupsScreen> {
                   content: Column(
                     children: groups.map((group) {
                       return ListTile(
-                        leading: group['imageUrl'] != null
+                        leading: group['imagePath'] != null
                             ? Image.network(
-                                group['imageUrl'],
+                                group['imagePath'],
                                 width: 50,
                                 height: 50,
                                 fit: BoxFit.cover,
                               )
                             : Icon(Icons.group),
                         title: Text(group['name']),
-                        subtitle: Text(group['description'] ??
-                            'No description available'),
+                        subtitle: Text(group['description'] ?? ''),
                         onTap: () {
                           Navigator.push(
                             context,

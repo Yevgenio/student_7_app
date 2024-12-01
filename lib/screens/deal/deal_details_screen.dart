@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/deal_service.dart';
+import '../../services/deal_service.dart';
 
 class DealDetailsScreen extends StatefulWidget {
   final String dealId;
@@ -45,36 +45,39 @@ class _DealDetailsScreenState extends State<DealDetailsScreen> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : dealDetails != null
-              ? Padding(
+                ? Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      dealDetails!['imageUrl'] != null
-                          ? Image.network(dealDetails!['imageUrl'], fit: BoxFit.cover)
-                          : Icon(Icons.local_offer, size: 100),
+                        if (dealDetails!['imagePath'] != null)
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              dealDetails!['imagePath'],
+                              fit: BoxFit.cover,
+                              height: 200, // Set a maximum height
+                              width: double.infinity,
+                            ),
+                          ),
                       SizedBox(height: 16),
                       Text(
                         dealDetails!['name'],
                         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 8),
-                      Text(dealDetails!['description'] ?? 'No description available'),
-                      SizedBox(height: 16),
+                      Text(dealDetails!['description'] ?? ''),
+                      SizedBox(height: 8),
                       Text(
-                        'Price: ${dealDetails!['price'] ?? 'Not available'}',
+                        'Category: ${dealDetails!['category'] ?? 'כללי'}',
                         style: TextStyle(fontSize: 18),
                       ),
                       SizedBox(height: 8),
-                      Text(
-                        'Category: ${dealDetails!['category'] ?? 'No category'}',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Available until: ${dealDetails!['endsAt'] ?? 'No end date'}',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                      if(dealDetails!['endsAt'] != null) 
+                        Text(
+                          'Available until: ${dealDetails!['endsAt']}',
+                          style: TextStyle(fontSize: 18),
+                        ),
                       Spacer(),
                       ElevatedButton(
                         onPressed: () {
@@ -85,7 +88,7 @@ class _DealDetailsScreenState extends State<DealDetailsScreen> {
                       ),
                     ],
                   ),
-                )
+              )
               : Center(child: Text('Deal not found')),
     );
   }

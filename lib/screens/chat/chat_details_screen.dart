@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../services/chat_service.dart'; // Replace with your actual path
+import '../../services/chat_service.dart'; // Replace with your actual path
 
 class ChatGroupDetailsScreen extends StatefulWidget {
   final String groupId;
@@ -53,11 +53,11 @@ class _ChatGroupDetailsScreenState extends State<ChatGroupDetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Constrain the image size
-                        if (groupDetails!['imageUrl'] != null)
+                        if (groupDetails!['imagePath'] != null)
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8.0),
                             child: Image.network(
-                              groupDetails!['imageUrl'],
+                              groupDetails!['imagePath'],
                               fit: BoxFit.cover,
                               height: 200, // Set a maximum height
                               width: double.infinity,
@@ -70,12 +70,12 @@ class _ChatGroupDetailsScreenState extends State<ChatGroupDetailsScreen> {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          groupDetails!['description'] ?? 'No description available',
+                          groupDetails!['description'] ?? '',
                           style: TextStyle(fontSize: 16),
                         ),
                         SizedBox(height: 16),
                         Text(
-                          'Category: ${groupDetails!['category'] ?? 'General'}',
+                          'Category: ${groupDetails!['category'] ?? 'כללי'}',
                           style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
                         ),
                         SizedBox(height: 16),

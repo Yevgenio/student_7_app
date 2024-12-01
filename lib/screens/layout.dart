@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'chat/chat_list_screen.dart';
 import 'deal/deal_list_screen.dart';
-import 'home_screen.dart';
-import 'profile_screen.dart';
-import 'search_screen.dart';
+import 'home/home_screen.dart';
+import 'user/user_profile_screen.dart';
+import 'search/search_screen.dart';
 
 class AppLayout extends StatefulWidget {
   const AppLayout({Key? key}) : super(key: key);
@@ -57,7 +57,7 @@ class _AppLayoutState extends State<AppLayout> {
               page = SearchScreen();
               break;
             case 4:
-              page = ProfileScreen();
+              page = ProfileScreen(token: '');
               break;
             default:
               page = HomeScreen();
