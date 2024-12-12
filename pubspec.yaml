@@ -41,6 +41,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   shared_preferences: ^2.2.3
+  flutter_svg: ^1.1.6
 
 dev_dependencies:
   flutter_test:

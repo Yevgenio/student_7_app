@@ -92,6 +92,20 @@ Future<void> checkLoginStatus() async {
               ),
               child: const Text('Profile', style: TextStyle(color: Colors.white)),
             ),
+            Container(
+              width: 24,
+              height: 24,
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(),
+              child: FlutterLogo(),
+          ),
+                      Container(
+              width: 24,
+              height: 24,
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(),
+              child: FlutterLogo(),
+          ),
           if (username != null)
             IconButton(
               onPressed: logout,

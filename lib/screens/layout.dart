@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import '../app_icons.dart'; 
+
 import 'chat/chat_list_screen.dart';
 import 'deal/deal_list_screen.dart';
 import 'home/home_screen.dart';
@@ -15,102 +18,63 @@ class AppLayout extends StatefulWidget {
 class _AppLayoutState extends State<AppLayout> {
   int _selectedIndex = 0;
 
-  // Keys for nested navigators
-  final List<GlobalKey<NavigatorState>> _navigatorKeys = [
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
+  // Pages corresponding to the navigation destinations
+  final List<Widget> _pages = [
+    HomeScreen(),
+    ChatGroupsScreen(),
+    DealsScreen(),
+    SearchScreen(),
+    ProfileScreen(token: ''),
   ];
 
-  // final List<String> _titles = ['בית', 'קבוצות', 'הטבות', 'חיפוש', 'פרופיל'];
-
-  void _onTabTapped(int index) {
-    // Reset the current tab by popping all routes to the first route
-    _navigatorKeys[_selectedIndex].currentState?.popUntil((route) => route.isFirst);
-    if (_selectedIndex != index) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-  }
-
-  Widget _buildOffstageNavigator(int index) {
-    return Offstage(
-      offstage: _selectedIndex != index,
-      child: Navigator(
-        key: _navigatorKeys[index],
-        onGenerateRoute: (RouteSettings settings) {
-          Widget page;
-          switch (index) {
-            case 0:
-              page = HomeScreen();
-              break;
-            case 1:
-              page = ChatGroupsScreen();
-              break;
-            case 2:
-              page = DealsScreen();
-              break;
-            case 3:
-              page = SearchScreen();
-              break;
-            case 4:
-              page = ProfileScreen(token: '');
-              break;
-            default:
-              page = HomeScreen();
-          }
-          return MaterialPageRoute(
-            builder: (context) => page,
-            settings: settings,
-          );
-        },
+  // Navigation destinations with custom SVG icons
+  final List<NavigationDestination> _destinations = [
+    NavigationDestination(
+      selectedIcon: SvgPicture.asset(
+        'home.svg',
+        width: 24,
+        height: 24,
+        color: Color(0xFF19276F),
       ),
-    );
-  }
+      icon: AppIcons.homeOutline(size: 24, color: Color(0xFF19276F)),
+      label: 'בית',
+    ),
+    NavigationDestination(
+      selectedIcon: AppIcons.groupSolid(size: 24, color: Color(0xFF19276F)),
+      icon: AppIcons.groupOutline(size: 24, color: Color(0xFF19276F)),
+      label: 'קבוצות',
+    ),
+    NavigationDestination(
+      selectedIcon: AppIcons.offersSolid(size: 24, color: Color(0xFF19276F)),
+      icon: AppIcons.offersOutline(size: 24, color: Color(0xFF19276F)),
+      label: 'הטבות',
+    ),
+    NavigationDestination(
+      selectedIcon: AppIcons.searchSolid(size: 24, color: Color(0xFF19276F)),
+      icon: AppIcons.searchOutline(size: 24, color: Color(0xFF19276F)),
+      label: 'חיפוש',
+    ),
+    NavigationDestination(
+      selectedIcon: AppIcons.profileSolid(size: 24, color: Color(0xFF19276F)),
+      icon: AppIcons.profileOutline(size: 24, color: Color(0xFF19276F)),
+      label: 'פרופיל',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: TextDirection.rtl, // Set RTL for Hebrew support
       child: Scaffold(
-        // appBar: AppBar(
-        //   title: Text(_titles[_selectedIndex]),
-        // ),
-        body: Stack(
-          children: List.generate(
-            5,
-            (index) => _buildOffstageNavigator(index),
-          ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onTabTapped,
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'בית',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.group),
-              label: 'קבוצות',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.local_offer),
-              label: 'הטבות',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'חיפוש',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'פרופיל',
-            ),
-          ],
+        body: _pages[_selectedIndex], // Display the selected page
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: (int index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          destinations: _destinations,
         ),
       ),
     );

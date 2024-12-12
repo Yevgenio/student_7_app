@@ -14,8 +14,19 @@ class SearchScreen extends StatelessWidget {
         ),
       ),
       body: const Center(
-        child: Text('כרגע לא פעיל'),
+        child: Text(
+          'לכל ההטבות',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+          color: Color(0xFF39A7EE),
+          fontSize: 14,
+          fontFamily: 'Assistant',
+          fontWeight: FontWeight.w600,
+          height: 0,
+          ),
+        ),
       ),
+      
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_7_app/config.dart';
 import '../../services/deal_service.dart';
 import 'deal_details_screen.dart';
 
@@ -129,15 +130,8 @@ class DealCard extends StatelessWidget {
         margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
+          color: AppTheme.cardColor,
+          boxShadow: const [AppTheme.primaryShadow]
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,10 +152,7 @@ class DealCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
                 name,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTheme.label,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -171,7 +162,7 @@ class DealCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
                 description,
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                style: AppTheme.p,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -182,3 +173,26 @@ class DealCard extends StatelessWidget {
     );
   }
 }
+
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 8),
+            //   child: Text(
+            //     name,
+            //     style: const TextStyle(
+            //       fontSize: 16,
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //     overflow: TextOverflow.ellipsis,
+            //   ),
+            // ),
+            // const SizedBox(height: 5),
+            // // Deal Description
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 8),
+            //   child: Text(
+            //     description,
+            //     style: const TextStyle(fontSize: 14, color: Colors.grey),
+            //     maxLines: 2,
+            //     overflow: TextOverflow.ellipsis,
+            //   ),
+            // ),

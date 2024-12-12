@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My App',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(primarySwatch: Colors.blue,
+                        scaffoldBackgroundColor: Color(0xFFF8F8F8)),// #F8F8F8
       // Set Hebrew Locale and Directionality
       locale: const Locale('he'),
       supportedLocales: const [
