@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/chat_service.dart';
 import '../../services/deal_service.dart';
@@ -104,7 +105,11 @@ Future<void> checkLoginStatus() async {
               height: 24,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(),
-              child: FlutterLogo(),
+              child: SvgPicture.asset(
+                '../home.svg',
+                width: 24,
+                height: 24,
+              ),
           ),
           if (username != null)
             IconButton(

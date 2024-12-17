@@ -5,7 +5,7 @@ class Config {
   // static const String apiBaseUrl = 'http://51.84.9.120'; // my server
   // static const String apiBaseUrl = 'http://51.16.37.75'; // student-7
   static const String apiBaseUrl =
-      'http://student-7.boukingolts.art'; // student-7
+      'https://student-7.boukingolts.art'; // student-7
   // static const int color_promary = #19276F;
 }
 

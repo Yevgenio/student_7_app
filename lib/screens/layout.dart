@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../app_icons.dart'; 
+import '../app_icons.dart';
 
 import 'chat/chat_list_screen.dart';
 import 'deal/deal_list_screen.dart';
@@ -30,33 +30,28 @@ class _AppLayoutState extends State<AppLayout> {
   // Navigation destinations with custom SVG icons
   final List<NavigationDestination> _destinations = [
     NavigationDestination(
-      selectedIcon: SvgPicture.asset(
-        'home.svg',
-        width: 24,
-        height: 24,
-        color: Color(0xFF19276F),
-      ),
-      icon: AppIcons.homeOutline(size: 24, color: Color(0xFF19276F)),
+      selectedIcon: AppIcons.homeSolid(),
+      icon: AppIcons.homeOutline(),
       label: 'בית',
     ),
     NavigationDestination(
-      selectedIcon: AppIcons.groupSolid(size: 24, color: Color(0xFF19276F)),
-      icon: AppIcons.groupOutline(size: 24, color: Color(0xFF19276F)),
+      selectedIcon: AppIcons.groupSolid(),
+      icon: AppIcons.groupOutline(),
       label: 'קבוצות',
     ),
     NavigationDestination(
-      selectedIcon: AppIcons.offersSolid(size: 24, color: Color(0xFF19276F)),
-      icon: AppIcons.offersOutline(size: 24, color: Color(0xFF19276F)),
+      selectedIcon: AppIcons.dealsSolid(),
+      icon: AppIcons.dealsOutline(),
       label: 'הטבות',
     ),
     NavigationDestination(
-      selectedIcon: AppIcons.searchSolid(size: 24, color: Color(0xFF19276F)),
-      icon: AppIcons.searchOutline(size: 24, color: Color(0xFF19276F)),
+      selectedIcon: AppIcons.searchSolid(),
+      icon: AppIcons.searchOutline(),
       label: 'חיפוש',
     ),
     NavigationDestination(
-      selectedIcon: AppIcons.profileSolid(size: 24, color: Color(0xFF19276F)),
-      icon: AppIcons.profileOutline(size: 24, color: Color(0xFF19276F)),
+      selectedIcon: AppIcons.profileSolid(),
+      icon: AppIcons.profileOutline(),
       label: 'פרופיל',
     ),
   ];
