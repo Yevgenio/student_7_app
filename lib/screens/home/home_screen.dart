@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:student_7_app/config.dart';
+
 import '../../services/chat_service.dart';
 import '../../services/deal_service.dart';
 import '../../services/auth_service.dart';
+
+import '../deal/deal_query.dart';
+
 import '../user/user_login_screen.dart';
 import '../user/user_signup_screen.dart';
 import '../user/user_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -30,21 +37,35 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchData();
   }
 
-// Check login status and fetch user details
-Future<void> checkLoginStatus() async {
-  final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('token');
-  if (token != null) {
-    try {
-      final user = await authService.fetchUserProfile(token);
-      setState(() {
-        username = user.username; // Set the username to display
-      });
-    } catch (e) {
-      print('Error fetching user profile: $e');
+  Future<void> checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final refreshToken = prefs.getString('refreshToken');
+
+    if (token != null) {
+      try {
+        final user = await authService.fetchUserProfile(token);
+        setState(() {
+          username = user.username;
+        });
+      } catch (e) {
+        if (refreshToken != null) {
+          try {
+            final newToken = await authService.refreshToken(refreshToken);
+            await prefs.setString('token', newToken);
+            final user = await authService.fetchUserProfile(newToken);
+            setState(() {
+              username = user.username;
+            });
+          } catch (refreshError) {
+            logout();
+          }
+        } else {
+          logout();
+        }
+      }
     }
   }
-}
 
   Future<void> fetchData() async {
     try {
@@ -75,7 +96,7 @@ Future<void> checkLoginStatus() async {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('עמוד הבית'),
         actions: [
           if (username == null)
             TextButton(
@@ -83,34 +104,29 @@ Future<void> checkLoginStatus() async {
                 context,
                 MaterialPageRoute(builder: (context) => LoginScreen()),
               ),
-              child: const Text('Login', style: TextStyle(color: Colors.white)),
+              child: const Text('התחבר', style: AppTheme.label),
             )
           else
             TextButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfileScreen(token: '')),
-              ),
-              child: const Text('Profile', style: TextStyle(color: Colors.white)),
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                final token =
+                    prefs.getString('token'); // Retrieve the saved token
+                if (token != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProfileScreen(token: token)),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Please log in to access your profile.')),
+                  );
+                }
+              },
+              child: const Text('פרופיל', style: AppTheme.label),
             ),
-            Container(
-              width: 24,
-              height: 24,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(),
-              child: FlutterLogo(),
-          ),
-                      Container(
-              width: 24,
-              height: 24,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(),
-              child: SvgPicture.asset(
-                '../home.svg',
-                width: 24,
-                height: 24,
-              ),
-          ),
           if (username != null)
             IconButton(
               onPressed: logout,
@@ -126,19 +142,22 @@ Future<void> checkLoginStatus() async {
                 children: [
                   if (username == null) ...[
                     Center(
-                      child: Column(
+                      child: Row(
                         children: [
                           ElevatedButton(
                             onPressed: () => Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => LoginScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()),
                             ),
                             child: const Text('Login'),
                           ),
+                          SizedBox(width: AppTheme.itemPadding),
                           ElevatedButton(
                             onPressed: () => Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => SignUpScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) => SignUpScreen()),
                             ),
                             child: const Text('Sign Up'),
                           ),
@@ -150,71 +169,15 @@ Future<void> checkLoginStatus() async {
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
                         'Welcome, $username!',
-                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text(
-                        'Chat Groups',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 150,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: chatGroups.length,
-                        itemBuilder: (context, index) {
-                          final group = chatGroups[index];
-                          return Container(
-                            width: 150,
-                            margin: const EdgeInsets.all(8.0),
-                            child: Card(
-                              child: Center(
-                                child: Text(group['name']),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text(
-                        'Deals',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: deals.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 8.0,
-                        mainAxisSpacing: 8.0,
-                      ),
-                      itemBuilder: (context, index) {
-                        final deal = deals[index];
-                        return Card(
-                          child: Column(
-                            children: [
-                              if (deal['imagePath'] != null)
-                                Image.network(deal['imagePath'], height: 100, fit: BoxFit.cover),
-                              Text(
-                                deal['name'],
-                                style: const TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(deal['description'] ?? ''),
-                            ],
-                          ),
-                        );
-                      },
                     ),
                   ],
+                  Container(
+                    height: 400, // Adjust height as needed
+                    child: DealQuery(query: 'sort=recent&limit=10'),
+                  ),
                 ],
               ),
             ),

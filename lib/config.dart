@@ -13,8 +13,8 @@ class AppTheme {
   // Define primary and secondary colors
   static const Color primaryColor = Color(0xFF19276F); // Purple
   static const Color secondaryColor = Color(0xFF39A7EE); // Teal
-  static const Color cardColor = Color(0xFFFFFFFF); // White
   static const Color backgroundColor = Color(0xFFF8F8F8); // White
+  static const Color cardColor = Color(0xFFFFFFFF); // White
 
   // Define text styles
   static const TextStyle h1 = TextStyle(
@@ -82,7 +82,9 @@ class AppTheme {
   );
 
   // Define padding and spacing constants
-  static const double defaultPadding = 16.0;
+  static const double itemPadding = 16.0;
+    // Define padding and spacing constants
+  static const double sectionPadding = 40.0;
 
   // Define the overall theme
   static ThemeData get themeData {

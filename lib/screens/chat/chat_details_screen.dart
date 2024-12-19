@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/chat_service.dart'; // Replace with your actual path
 
-class ChatGroupDetailsScreen extends StatefulWidget {
-  final String groupId;
+class ChatDetailsScreen extends StatefulWidget {
+  final String chatId;
 
-  ChatGroupDetailsScreen({required this.groupId});
+  ChatDetailsScreen({required this.chatId});
 
   @override
-  _ChatGroupDetailsScreenState createState() => _ChatGroupDetailsScreenState();
+  _ChatDetailsScreenState createState() => _ChatDetailsScreenState();
 }
 
-class _ChatGroupDetailsScreenState extends State<ChatGroupDetailsScreen> {
+class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   final ChatService chatService = ChatService();
   Map<String, dynamic>? groupDetails;
   bool isLoading = true;
@@ -24,7 +24,7 @@ class _ChatGroupDetailsScreenState extends State<ChatGroupDetailsScreen> {
 
   Future<void> fetchGroupDetails() async {
     try {
-      final data = await chatService.fetchChatById(widget.groupId);
+      final data = await chatService.fetchChatById(widget.chatId);
       setState(() {
         groupDetails = data;
         isLoading = false;

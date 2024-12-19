@@ -56,4 +56,19 @@ class AuthService {
       throw Exception('Failed to fetch user profile');
     }
   }
+
+  Future<String> refreshToken(String refreshToken) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/refresh'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'refreshToken': refreshToken}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['token'];
+    } else {
+      throw Exception('Failed to refresh token');
+    }
+  }
 }

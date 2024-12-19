@@ -10,11 +10,13 @@ class ChatService {
     final response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print(data);
       // Update image paths to include the full API URL
       for (var item in data) {
         if (item['imagePath'] != null) {
           item['imagePath'] = '$uploadUrl/${item['imagePath']}';
+        } 
+        else {
+          item['imagePath'] = '$uploadUrl/default';
         }
       }
       return data;

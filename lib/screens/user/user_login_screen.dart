@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
+// import '../home/home_screen.dart';
+import '../layout.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -21,10 +25,14 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
-        String token = await authService.login(email, password);
+        final token = await authService.login(email, password);
         final prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', token); // Save the token
-        Navigator.pop(context); // Go back to HomeScreen
+        await prefs.setString('token', token);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AppLayout()), // Redirect to layout
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class StyledListItem extends StatelessWidget {
+class ChatListItem extends StatelessWidget {
   final String title;
   final String imagePath;
   final VoidCallback onTap;
 
-  const StyledListItem({
+  const ChatListItem({
     Key? key,
     required this.title,
     required this.imagePath,
@@ -72,7 +72,10 @@ class StyledListItem extends StatelessWidget {
                       fontFamily: 'Assistant',
                       fontWeight: FontWeight.w400,
                       height: 1.2,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    // overflow: TextOverflow.ellipsis,
+                    // maxLines: 1,
                   ),
                   const SizedBox(height: 4),
                 ],
