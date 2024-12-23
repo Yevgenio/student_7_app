@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../app_icons.dart';
-import 'chat/chat_screen.dart';
-import 'deal/deal_screen.dart'; 
-import 'home/home_screen.dart';
-import 'user/user_profile_screen.dart';
-import 'search/search_screen.dart';
+import '../screens/chat/chat_details_screen.dart';
+import 'app_icons.dart';
+import '../screens/chat/chat_screen.dart';
+
+import '../screens/deal/deal_screen.dart';
+import '../screens/deal/deal_details_screen.dart';
+
+import '../screens/home/home_screen.dart';
+import '../screens/user/user_profile_screen.dart';
+import '../screens/search/search_screen.dart';
 
 class AppLayout extends StatefulWidget {
   const AppLayout({Key? key}) : super(key: key);
@@ -38,14 +42,34 @@ class _AppLayoutState extends State<AppLayout> {
       token = prefs.getString('token');
     });
   }
-
-  // Pages corresponding to the navigation destinations
-late final List<Widget> _pages = [
-    HomeScreen(),
-    ChatScreen(onBackToHome: () => setIndex(0)), 
-    DealScreen(onBackToHome: () => setIndex(0)),
-    SearchScreen(),
-    Placeholder(), // Ensure token is passed dynamically
+  
+  late final List<Widget> _pages = [
+    Navigator(
+      key: GlobalKey<NavigatorState>(),
+      onGenerateRoute: (settings) {
+        if (settings.name == '/dealDetails') {
+          // setIndex(2);
+          final dealId = settings.arguments as String;
+          return MaterialPageRoute(
+            builder: (context) => DealDetailsScreen(dealId: dealId),
+          );
+        }
+        if (settings.name == '/chatDetails') {
+          // setIndex(2);
+          final chatId = settings.arguments as String;
+          return MaterialPageRoute(
+            builder: (context) => ChatDetailsScreen(chatId: chatId),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (context) => HomeScreen(),
+        );
+      },
+    ),
+    ChatScreen(onBackToHome: () => {setIndex(0)}),
+    DealScreen(onBackToHome: () => {setIndex(0)}),
+    SearchScreen(onBackToHome: () => {setIndex(0)}),
+    Placeholder(), // ProfileScreen to be replaced dynamically
   ];
 
   // Navigation destinations with custom SVG icons
@@ -88,19 +112,16 @@ late final List<Widget> _pages = [
             if (page is Placeholder && _selectedIndex == 4) {
               // Handle ProfileScreen navigation manually
               return token != null
-                  ? ProfileScreen(token: token!)
-                  : const Center(child: Text('Please log in to view your profile.'));
+                  ? ProfileScreen(token: token!, onBackToHome: () => {setIndex(0)})
+                  : const Center(
+                      child: Text('Please log in to view your profile.'));
             }
             return page;
           }).toList(),
         ),
         bottomNavigationBar: NavigationBar(
           selectedIndex: _selectedIndex,
-          onDestinationSelected: (int index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
+          onDestinationSelected: setIndex,
           destinations: _destinations,
         ),
       ),

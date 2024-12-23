@@ -87,6 +87,36 @@ class AppTheme {
   static const double sectionPadding = 40.0;
 
   // Define the overall theme
+  static ThemeData get appBarTheme {
+    return ThemeData(
+      primaryColor: primaryColor,
+      scaffoldBackgroundColor: backgroundColor,
+      fontFamily: 'Assistant', // Change to your preferred font
+      textTheme: const TextTheme(
+        displayLarge: h1,
+        bodyLarge: label,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        foregroundColor: primaryColor,
+        elevation: 1,
+        toolbarHeight: 85,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
+            ),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: secondaryColor,
+          textStyle: TextStyle(fontSize: 16, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  // Define the overall theme
   static ThemeData get themeData {
     return ThemeData(
       primaryColor: primaryColor,
@@ -97,14 +127,15 @@ class AppTheme {
         bodyLarge: label,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
+        backgroundColor: cardColor,
+        foregroundColor: primaryColor,
+        elevation: 1,
+        toolbarHeight: 85
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor,
-          textStyle: TextStyle(fontSize: 16),
+          backgroundColor: secondaryColor,
+          textStyle: TextStyle(fontSize: 16, color: Colors.white),
         ),
       ),
     );

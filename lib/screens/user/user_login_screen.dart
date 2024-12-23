@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
 // import '../home/home_screen.dart';
-import '../layout.dart';
+import '../../layout/app_nav.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -29,10 +29,11 @@ class _LoginScreenState extends State<LoginScreen> {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AppLayout()), // Redirect to layout
-        );
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/',
+        (route) => false, // Remove all previous routes
+      );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),

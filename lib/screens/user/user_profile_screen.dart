@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:student_7_app/layout/app_bar.dart';
 import '../../services/auth_service.dart';
 import '../../models/user_model.dart';
 import '../../config.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String token;
+  final VoidCallback onBackToHome;
 
-  const ProfileScreen({required this.token});
+  const ProfileScreen({required this.token, required this.onBackToHome, Key? key}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -43,11 +45,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('פרופיל'),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: AppTheme.secondaryColor, // Primary color
+      appBar: CustomAppBar(
+        title:'פרופיל',
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: widget.onBackToHome,
+          ),
       ),
       body: isLoading
         ? const Center(child: CircularProgressIndicator())

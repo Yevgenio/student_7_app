@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import '../../config.dart'; // Import AppTheme for styling
 
-class DealCard extends StatelessWidget {
+class ChatQueryItem extends StatelessWidget {
   final String imageUrl;
   final String name;
   final String description;
-  final String dealId;
+  final String chatId;
   final double width; // Allow customization if needed
   final double height;
 
-  const DealCard({
+  const ChatQueryItem({
     required this.imageUrl,
     required this.name,
     required this.description,
-    required this.dealId,
-    this.width = 152, // Default width
-    this.height = 212, // Default height
+    required this.chatId,
+    this.width = 200, // Default width
+    this.height = 100, // Default height
     Key? key,
   }) : super(key: key);
 
@@ -25,8 +25,8 @@ class DealCard extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(
           context,
-          '/dealDetails',
-          arguments: dealId,
+          '/chatDetails',
+          arguments: chatId,
         );
       },
       child: Padding(
@@ -41,25 +41,25 @@ class DealCard extends StatelessWidget {
             boxShadow: [AppTheme.primaryShadow],
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Top Section: Image
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                child: Image.network(
-                  imageUrl,
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 144,
-                    color: Colors.grey[300],
-                    child: const Center(
-                        child: Icon(Icons.image, color: Colors.grey)),
-                  ),
-                ),
-              ),
+              // ClipRRect(
+              //   borderRadius: const BorderRadius.all(Radius.circular(8)),
+              //   child: Image.network(
+              //     imageUrl,
+              //     height: 50,
+              //     width: 50,
+              //     fit: BoxFit.cover,
+              //     errorBuilder: (context, error, stackTrace) => Container(
+              //       height: 50,
+              //       color: Colors.grey[300],
+              //       child: const Center(
+              //           child: Icon(Icons.image, color: Colors.grey)),
+              //     ),
+              //   ),
+              // ),
               // Bottom Section: Text
               Expanded(
                 child: Padding(
@@ -68,21 +68,22 @@ class DealCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Deal Name
+                      // Chat Name
                       Text(
                         name,
                         style: AppTheme.label,
                         overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                        // maxLines: 1,
+                        maxLines: 2,
                       ),
                       const SizedBox(height: 4),
-                      // Deal Description
-                      Text(
-                        description,
-                        style: AppTheme.p,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
+                      // Chat Description
+                      // Text(
+                      //   description,
+                      //   style: AppTheme.p,
+                      //   overflow: TextOverflow.ellipsis,
+                      //   maxLines: 1,
+                      // ),
                     ],
                   ),
                 ),

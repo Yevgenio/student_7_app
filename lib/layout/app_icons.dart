@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'config.dart';
+import '../config.dart';
 
 class AppIcons {
   // Helper method to load an SVG asset

@@ -3,9 +3,14 @@ import 'package:accordion/accordion.dart';
 import '../../services/chat_service.dart';
 import 'chat_details_screen.dart';
 import '../../config.dart';
+import '../../layout/app_bar.dart';
 import 'chat_item.dart';
 
 class ChatList extends StatefulWidget {
+  final VoidCallback onBackToHome;
+
+  const ChatList({required this.onBackToHome, Key? key}) : super(key: key);
+
   @override
   _ChatListState createState() => _ChatListState();
 }
@@ -53,29 +58,11 @@ class _ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Back Button
-            // IconButton(
-            //   icon: const Icon(Icons.arrow_back, color: Color(0xFF19276F)),
-            //   iconSize: 24,
-            //   onPressed: () {
-            //     Navigator.of(context).pop(); // Navigate back to the previous screen
-            //   },
-            // ),
-            //const SizedBox(width: 8), // Spacing between the back button and title
-            // Title
-            const Text(
-              'קבוצות',
-              textAlign: TextAlign.center,
-              style: AppTheme.h2
-            ),
-            const SizedBox(width: 8),
-            const Icon(Icons.chat, color: Color(0xFF19276F)),
-          ],
+      appBar: CustomAppBar(
+        title: 'קבוצות',
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: widget.onBackToHome, 
         ),
       ),
       body: isLoading

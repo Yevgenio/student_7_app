@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:accordion/accordion.dart';
 import '../../config.dart';
 
-import 'chat_list.dart';
+import 'chat_catalog.dart';
 import 'chat_details_screen.dart';
 
 class ChatScreen extends StatelessWidget {

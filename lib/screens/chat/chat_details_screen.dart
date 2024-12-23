@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_7_app/layout/app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/chat_service.dart'; // Replace with your actual path
 
@@ -40,8 +41,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('פרטי הקבוצה'),
+      appBar: CustomAppBar(
+        title: 'פרטי הקבוצה',
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())

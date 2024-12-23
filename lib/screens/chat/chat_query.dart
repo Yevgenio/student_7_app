@@ -1,42 +1,42 @@
 import 'package:flutter/material.dart';
 import '../../config.dart';
-import 'deal_catalog_item.dart';
-import 'deal_list.dart'; // Import the new DealCard file
-import '../../services/deal_service.dart';
+import 'chat_query_item.dart';
+// import 'chat_list.dart'; // Import the new ChatCard file
+import '../../services/chat_service.dart';
 
-class DealQuery extends StatefulWidget {
+class ChatQuery extends StatefulWidget {
   final String title;
   final String query;
 
-  const DealQuery({required this.title, required this.query, Key? key}) : super(key: key);
-  
+  const ChatQuery({required this.title, required this.query, Key? key}) : super(key: key);
+
   @override
-  _DealQueryState createState() => _DealQueryState();
+  _ChatQueryState createState() => _ChatQueryState();
 }
 
-class _DealQueryState extends State<DealQuery> with AutomaticKeepAliveClientMixin  {
-  final DealService dealService = DealService();
-  List<dynamic> deals = [];
+class _ChatQueryState extends State<ChatQuery> with AutomaticKeepAliveClientMixin  {
+  final ChatService chatService = ChatService();
+  List<dynamic> chats = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    fetchDeals();
+    fetchChats();
   }
 
-  Future<void> fetchDeals() async {
+  Future<void> fetchChats() async {
     try {
-      final fetchedDeals = await dealService.fetchDealsByQuery(widget.query);
+      final fetchedChats = await chatService.fetchChatsByQuery(widget.query);
       setState(() {
-        deals = fetchedDeals;
+        chats = fetchedChats;
         isLoading = false;
       });
     } catch (e) {
       setState(() {
         isLoading = false;
       });
-      print('Error fetching deals: $e');
+      print('Error fetching chats: $e');
     }
   }
 
@@ -44,7 +44,7 @@ class _DealQueryState extends State<DealQuery> with AutomaticKeepAliveClientMixi
   Widget build(BuildContext context) {
         return isLoading
         ? const Center(child: CircularProgressIndicator())
-        : deals.isEmpty
+        : chats.isEmpty
             ? const Center(child: Text('אין הטבות'))
             : Padding(
                 padding: const EdgeInsets.all(AppTheme.itemPadding),
@@ -63,33 +63,22 @@ class _DealQueryState extends State<DealQuery> with AutomaticKeepAliveClientMixi
                             maxLines: 1,
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DealListScreen(query: widget.query),
-                              ),
-                            );
-                          },
-                          child: Text('עוד', style: AppTheme.item),
-                        ),
                       ],
                     ),
                     const SizedBox(height: AppTheme.itemPadding),
-                    // Horizontal Deals List
+                    // Horizontal Chats List
                     SizedBox(
-                      height: 212,
+                      height: 100,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: deals.length,
+                        itemCount: chats.length,
                         itemBuilder: (context, index) {
-                          final deal = deals[index];
-                          return DealCatalogItem(
-                            imageUrl: deal['imagePath'] ?? 'default',
-                            name: deal['name'] ?? 'New Deal',
-                            description: deal['description'] ?? '',
-                            dealId: deal['_id'],
+                          final chat = chats[index];
+                          return ChatQueryItem(
+                            imageUrl: chat['imagePath'] ?? 'default',
+                            name: chat['name'] ?? 'New Chat',
+                            description: chat['description'] ?? '',
+                            chatId: chat['_id'],
                           );
                         },
                       ),

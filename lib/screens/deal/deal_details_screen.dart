@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_7_app/layout/app_bar.dart';
 import '../../services/deal_service.dart';
 import '../../config.dart';
 
@@ -40,9 +41,7 @@ class _DealDetailsScreenState extends State<DealDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('פרטי ההטבה', style: AppTheme.h3),
-      ),
+      appBar: CustomAppBar(title: 'פרטי ההטבה',),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : dealDetails != null

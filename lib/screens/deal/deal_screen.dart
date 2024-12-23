@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'deal_list.dart';
+import 'deal_catalog.dart';
 import 'deal_details_screen.dart';
 
 class DealScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class DealScreen extends StatelessWidget {
         }
 
         return MaterialPageRoute(
-          builder: (context) => DealList(onBackToHome: onBackToHome),
+          builder: (context) => DealCatalog(onBackToHome: onBackToHome),
         );
       },
     );

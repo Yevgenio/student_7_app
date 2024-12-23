@@ -48,7 +48,6 @@ class DealService {
 
   Future<List<dynamic>> fetchDealsByQuery(String query) async {
     final response = await http.get(Uri.parse('$baseUrl/search?$query'));
-    print(response.body);
     if (response.statusCode == 200) {
       final Map<String, dynamic> decodedResponse = jsonDecode(response.body);
 
@@ -68,7 +67,6 @@ class DealService {
             item['barcodePath'] = '$uploadUrl/default';
           }
         }
-        print(data);
         return data;
       } else {
         throw Exception('Unexpected response format: "data" field missing');
@@ -78,5 +76,25 @@ class DealService {
       throw Exception(
           'Failed to fetch deals. Status Code: ${response.statusCode}');
     }
+  }
+
+  // GET distinct categories
+  Future<List<String>> fetchCategories() async {
+    final response = await http.get(Uri.parse('$baseUrl/categories'));
+    if (response.statusCode == 200) {
+      return List<String>.from(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to fetch categories');
+    }
+  }
+
+  // GET deals by categories
+  Future<List<dynamic>> fetchDealsByCategoryLimit(String category) async {
+    return fetchDealsByQuery('category=$category&limit=10');
+  }
+
+    // GET deals by categories
+  Future<List<dynamic>> fetchDealsByCategoryAll(String category) async {
+    return fetchDealsByQuery('category=$category');
   }
 }
