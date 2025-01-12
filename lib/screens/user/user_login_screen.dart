@@ -80,27 +80,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: login,
                       child: const Text('Login'),
                     ),
-                    // ElevatedButton.icon(
-                    //   icon: Icon(Icons.login),
-                    //   label: Text('Sign in with Google'),
-                    //   onPressed: () async {
-                    //     try {
-                    //       final token = await authService.googleSignIn();
-                    //       if (token != null) {
-                    //         await authService.loginWithGoogle(token); // Send token to backend
-                    //         Navigator.pushNamed(context, '/home');
-                    //       } else {
-                    //         ScaffoldMessenger.of(context).showSnackBar(
-                    //           SnackBar(content: Text('Google sign-in canceled')),
-                    //         );
-                    //       }
-                    //     } catch (e) {
-                    //       ScaffoldMessenger.of(context).showSnackBar(
-                    //         SnackBar(content: Text(e.toString())),
-                    //       );
-                    //     }
-                    //   },
-                    // ),
+                    ElevatedButton.icon(
+                      icon: Icon(Icons.login),
+                      label: Text('Sign in with Google'),
+                      onPressed: () async {
+                        try {
+                          final token = await authService.googleSignIn();
+                          if (token != null) {
+                            await authService.loginWithGoogle(token); // Send token to backend
+                            Navigator.pushNamed(context, '/home');
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Google sign-in canceled')),
+                            );
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(e.toString())),
+                          );
+                        }
+                      },
+                    ),
 
             ],
           ),

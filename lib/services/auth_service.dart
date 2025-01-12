@@ -26,6 +26,25 @@ class AuthService {
     }
   }
 
+  Future<void> loginWithGoogle(String idToken) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/google-login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'googleToken': idToken}),
+    );
+
+    if (response.statusCode == 200) {
+      final prefs = await SharedPreferences.getInstance();
+      final data = jsonDecode(response.body);
+
+      // Store tokens (if needed)
+      await prefs.setString('token', data['token']);
+      await prefs.setString('refreshToken', data['refreshToken']);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
   Future<void> signUp(String username, String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/signup'),
