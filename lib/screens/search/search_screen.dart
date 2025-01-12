@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:student_7_app/layout/app_nav.dart';
 import 'package:student_7_app/services/search_service.dart';
 import 'dart:convert';
 import '../../config.dart';
 import '../../layout/app_bar.dart';
+import 'search_item.dart';
 
 class SearchScreen extends StatefulWidget {
-  final VoidCallback onBackToHome;
-
-  const SearchScreen({required this.onBackToHome, Key? key}) : super(key: key);
+  const SearchScreen({super.key});
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -57,12 +57,16 @@ class _SearchScreenState extends State<SearchScreen> {
       if (selectedTypes.isEmpty) {
         final results = await _searchService.fetchGlobalSearchResults(query);
         setState(() {
-          _searchResults = [...results['chats'] ?? [], ...results['deals'] ?? []];
+          _searchResults = [
+            ...results['chats'] ?? [],
+            ...results['deals'] ?? []
+          ];
         });
       } else {
         List<dynamic> combinedResults = [];
         for (String type in selectedTypes) {
-          final results = await _searchService.fetchSearchResultsByType(query, type);
+          final results =
+              await _searchService.fetchSearchResultsByType(query, type);
           combinedResults.addAll(results);
         }
         setState(() {
@@ -78,16 +82,11 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'חיפוש',
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: widget.onBackToHome,
-        ),
       ),
       body: Column(
         children: [
@@ -99,33 +98,90 @@ class _SearchScreenState extends State<SearchScreen> {
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'הקלד לחיפוש...',
+                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    prefixIcon:
+                        Icon(Icons.search, color: AppTheme.secondaryColor),
+                    filled: true,
+                    fillColor: AppTheme.cardColor,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: AppTheme.secondaryColor),
                     ),
                   ),
+                  style: TextStyle(color: AppTheme.secondaryColor),
                 ),
-                const SizedBox(height: 16),
-                ToggleButtons(
-                  isSelected: _selections,
-                  onPressed: (index) {
-                    setState(() {
-                      _selections[index] = !_selections[index];
-                      _onSearchChanged(); // Re-fetch results on selection change
-                    });
-                  },
-                  borderRadius: BorderRadius.circular(8),
-                  selectedBorderColor: Colors.blue,
-                  selectedColor: Colors.white,
-                  fillColor: Colors.blue,
-                  color: Colors.black,
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Chats'),
+                // const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Text(
+                      "סוג תוצאות:",
+                      style: TextStyle(color: AppTheme.primaryColor),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Deals'),
+                    ToggleButtons(
+                      isSelected: _selections,
+                      onPressed: (index) {
+                        setState(() {
+                          _selections[index] = !_selections[index];
+                          _onSearchChanged(); // Re-fetch results on selection change
+                        });
+                      },
+                      borderColor: Colors.transparent,
+                      borderRadius:
+                          BorderRadius.circular(16), // Rounded corners
+                      selectedBorderColor:
+                          Colors.transparent, // Border color when selected
+                      splashColor: Colors.transparent,
+                      disabledColor: AppTheme.cardColor, // Disabled state color
+                      selectedColor:
+                          AppTheme.secondaryColor, // Text color when selected
+                      fillColor:
+                          Colors.transparent, // Background color when selected
+                      hoverColor: Colors.transparent,
+                      color:
+                          AppTheme.primaryColor, // Text color when not selected
+                      // constraints: const BoxConstraints(
+                      //   minHeight: 40, // Minimum height for buttons
+                      //   minWidth: 120, // Minimum width for buttons
+                      // ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8), // Margin between buttons
+                            child: Container(
+                            decoration: BoxDecoration(
+                              color: AppTheme.cardColor,
+                              boxShadow: [AppTheme.primaryShadow],
+                              // border: Border.all(color: Colors.grey[400] ?? Colors.grey),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Text('קבוצות ווצאפ'),
+                            ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8), // Margin between buttons
+                                child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppTheme.cardColor, // Background color set to white
+                                  boxShadow: [AppTheme.primaryShadow],
+                                  // border: Border.all(color: Colors.grey[400] ?? Colors.grey),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                child: Text('הטבות ומבצעים'),
+                                ),
+                         
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -140,27 +196,20 @@ class _SearchScreenState extends State<SearchScreen> {
                     itemCount: _searchResults.length,
                     itemBuilder: (context, index) {
                       final result = _searchResults[index];
-                      return Card(
-                        margin: const EdgeInsets.all(16),
-                        child: ListTile(
-                          leading: result['imagePath'] != null
-                              ? Image.network(result['imagePath'], width: 50, height: 50)
-                              : const Icon(Icons.image_not_supported),
-                          title: Text(
-                            result['name'] ?? 'No Name',
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,),
-                          subtitle: Text(
-                            result['description'] ?? 'No Description',
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,),
-                        ),
+                      return SearchItem(
+                        imageUrl: result['imagePath'] ?? 'default',
+                        name: result['name'] ?? 'New Chat',
+                        description: result['description'] ?? '',
+                        itemType:
+                            result['barcodePath'] != null ? 'deal' : 'chat',
+                        itemId: result['_id'],
                       );
                     },
                   ),
           ),
         ],
       ),
+      // bottomNavigationBar: AppNavbar(context: context, selectedIndex: 3),
     );
   }
 }

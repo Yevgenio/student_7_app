@@ -1,5 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:student_7_app/layout/app_bar.dart';
+import 'package:student_7_app/widgets/cached_image.dart';
 import '../../services/deal_service.dart';
 import '../../config.dart';
 
@@ -50,36 +53,36 @@ class _DealDetailsScreenState extends State<DealDetailsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Image and Title Row
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Image
                           if (dealDetails!['imagePath'] != null)
                             GestureDetector(
                               onTap: () => _showImageDialog(dealDetails!['imagePath']),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.2,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [AppTheme.secondaryShadow],
-                                  image: DecorationImage(
-                                    image: NetworkImage(dealDetails!['imagePath']),
-                                    fit: BoxFit.cover,
-                                  ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: CachedImage(
+                                  imagePath: dealDetails!['imagePath'],
+                                  height: 200, // Set a maximum height
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             )
                           else
                             Icon(Icons.image, size: 80, color: AppTheme.secondaryColor),
                           SizedBox(width: AppTheme.itemPadding),
+                      // Image and Title Row
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          
+                          // Image
+
                           // Title
                           Expanded(
                             child: Text(
                               dealDetails!['name'] ?? 'הטבה',
                               style: AppTheme.h2,
                               overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
                             ),
                           ),
                         ],
@@ -98,10 +101,7 @@ class _DealDetailsScreenState extends State<DealDetailsScreen> {
                         ),
                       SizedBox(height: AppTheme.itemPadding),
                       // Description
-                      Text(
-                        dealDetails!['description'] ?? '',
-                        style: AppTheme.p,
-                      ),
+                      _buildDescription(dealDetails!['description'] ?? ''),
                       SizedBox(height: AppTheme.itemPadding),
                       // Ends At
                       if (dealDetails!['endsAt'] != null)
@@ -141,7 +141,7 @@ class _DealDetailsScreenState extends State<DealDetailsScreen> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
-            child: Image.network(imagePath, fit: BoxFit.cover),
+            child: CachedImage(imagePath: imagePath, fit: BoxFit.cover),
           ),
         );
       },
@@ -158,10 +158,49 @@ class _DealDetailsScreenState extends State<DealDetailsScreen> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
-            child: Image.network(barcodePath, fit: BoxFit.contain),
+            child: CachedImage(imagePath: barcodePath, fit: BoxFit.contain),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildDescription(String description) {
+    // Regular expression to match URLs starting with http, https, or www
+    final regex = RegExp(
+        r'(https?:\/\/[^\s]+|www\.[^\s]+)',
+        caseSensitive: false);
+
+    final spans = <TextSpan>[];
+
+    description.splitMapJoin(
+      regex,
+      onMatch: (match) {
+        final url = match.group(0)!; // Extract the matched URL
+        final displayText = url.startsWith('www') ? 'https://$url' : url; // Add scheme to "www" if missing
+        spans.add(TextSpan(
+          text: url,
+          style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () async {
+              final uri = Uri.parse(displayText);
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              } else {
+                print('Could not launch $displayText');
+              }
+            },
+        ));
+        return '';
+      },
+      onNonMatch: (text) {
+        spans.add(TextSpan(text: text, style: AppTheme.p));
+        return '';
+      },
+    );
+
+    return RichText(
+      text: TextSpan(children: spans),
     );
   }
 }

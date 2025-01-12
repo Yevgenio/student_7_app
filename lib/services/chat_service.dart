@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../config.dart';
+import 'image_service.dart';
 
 class ChatService {
-  final String baseUrl = '${Config.apiBaseUrl}/api/chats';
-  final String uploadUrl = '${Config.apiBaseUrl}/api/uploads';
+  final String baseUrl = '${ServerAPI.baseUrl}/api/chats';
 
   Future<List<dynamic>> fetchChats() async {
     final response = await http.get(Uri.parse(baseUrl));
@@ -12,12 +12,7 @@ class ChatService {
       final data = jsonDecode(response.body);
       // Update image paths to include the full API URL
       for (var item in data) {
-        if (item['imagePath'] != null) {
-          item['imagePath'] = '$uploadUrl/${item['imagePath']}';
-        } 
-        else {
-          item['imagePath'] = '$uploadUrl/default';
-        }
+        item['imagePath'] = await ImageService.getProcessedImageUrl(item['imagePath']);
       }
       return data;
     } else {
@@ -30,9 +25,7 @@ class ChatService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       // Update image paths to include the full API URL
-      if (data['imagePath'] != null) {
-        data['imagePath'] = '$uploadUrl/${data['imagePath']}';
-      }
+      data['imagePath'] = await ImageService.getProcessedImageUrl(data['imagePath']);
 
       if (data['category'] != null) {
           data['barcodePath'] = 'כללי';
@@ -52,11 +45,7 @@ class ChatService {
         final data = decodedResponse['data'];
         // Update image paths to include the full API URL
         for (var item in data) {
-          if (item['imagePath'] != null) {
-            item['imagePath'] = '$uploadUrl/${item['imagePath']}';
-          } else {
-            item['imagePath'] = '$uploadUrl/default';
-          }
+          item['imagePath'] = await ImageService.getProcessedImageUrl(item['imagePath']);
         }
         return data;
       } else {

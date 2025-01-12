@@ -6,9 +6,10 @@ import 'chat_catalog.dart';
 import 'chat_details_screen.dart';
 
 class ChatScreen extends StatelessWidget {
-  final VoidCallback onBackToHome;
+  // final VoidCallback onBackToHome;
+  // const ChatScreen({required this.onBackToHome, Key? key}) : super(key: key);
 
-  const ChatScreen({required this.onBackToHome, Key? key}) : super(key: key);
+  const ChatScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class ChatScreen extends StatelessWidget {
         }
 
         return MaterialPageRoute(
-          builder: (context) => ChatList(onBackToHome: onBackToHome),
+          builder: (context) => ChatCatalog(),
         );
       },
     );

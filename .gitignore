@@ -29,7 +29,7 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+build/
 
 # Symbolication related
 app.*.symbols
@@ -41,3 +41,17 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Exclude keystore and sensitive files
+android/key.properties
+android/gradle.properties
+**/*.jks
+**/*.keystore
+
+# Platform-specific exclusions
+# Keep platform configuration files (e.g., AndroidManifest.xml, Info.plist)
+!android/app/src/main/AndroidManifest.xml
+!ios/Runner/Info.plist
+!macos/Runner/Info.plist
+!windows/Runner/Info.plist
+!linux/Runner/Info.plist

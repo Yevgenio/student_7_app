@@ -3,6 +3,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_7_app/config.dart';
 import 'package:student_7_app/layout/app_drawer.dart';
+import 'package:student_7_app/layout/app_nav.dart';
+import 'package:student_7_app/screens/chat/chat_screen.dart';
+import 'package:student_7_app/screens/home/home_mininav.dart';
+import 'package:student_7_app/screens/home/home_search.dart';
+import 'home_memo.dart';
 import '../../layout/app_bar.dart';
 
 import '../../services/chat_service.dart';
@@ -26,9 +31,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ChatService chatService = ChatService();
   final DealService dealService = DealService();
-  final AuthService authService = AuthService();
 
-  String? username;
   List<dynamic> chats = [];
   List<dynamic> deals = [];
   bool isLoading = true;
@@ -36,38 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    checkLoginStatus();
     fetchData();
-  }
-
-  Future<void> checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    final refreshToken = prefs.getString('refreshToken');
-
-    if (token != null) {
-      try {
-        final user = await authService.fetchUserProfile(token);
-        setState(() {
-          username = user.username;
-        });
-      } catch (e) {
-        if (refreshToken != null) {
-          try {
-            final newToken = await authService.refreshToken(refreshToken);
-            await prefs.setString('token', newToken);
-            final user = await authService.fetchUserProfile(newToken);
-            setState(() {
-              username = user.username;
-            });
-          } catch (refreshError) {
-            logout();
-          }
-        } else {
-          logout();
-        }
-      }
-    }
   }
 
   Future<void> fetchData() async {
@@ -87,179 +59,72 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    setState(() {
-      username = null;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'סטודנט 7',
-        actions: [
-          if (username == null)
-            TextButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              ),
-              child: const Text('התחבר', style: AppTheme.label),
-            )
-          else
-            TextButton(
-              onPressed: () async {
-                final prefs = await SharedPreferences.getInstance();
-                final token =
-                    prefs.getString('token'); // Retrieve the saved token
-                if (token != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProfileScreen(
-                            token: token,
-                            onBackToHome: () {
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                '/', // Navigate to home
-                                (route) => false, // Remove all previous routes
-                              );
-                            })),
-                  );
-                }
-              },
-              child: const Text('פרופיל', style: AppTheme.label),
-            ),
-          if (username != null)
-            IconButton(
-              onPressed: logout,
-              icon: const Icon(Icons.logout),
-            ),
-        ],
+        // actions: [
+        //   if (username == null)
+        //     TextButton(
+        //       onPressed: () => Navigator.push(
+        //         context,
+        //         MaterialPageRoute(builder: (context) => LoginScreen()),
+        //       ),
+        //       child: const Text('התחבר', style: AppTheme.label),
+        //     )
+        //   else
+        //     TextButton(
+        //       onPressed: () async {
+        //         final prefs = await SharedPreferences.getInstance();
+        //         final token =
+        //             prefs.getString('token'); // Retrieve the saved token
+        //         if (token != null) {
+        //           Navigator.push(
+        //             context,
+        //             MaterialPageRoute(builder: (context) => ProfileScreen()),
+        //           );
+        //         }
+        //       },
+        //       child: const Text('פרופיל', style: AppTheme.label),
+        //     ),
+        //   if (username != null)
+        //     IconButton(
+        //       onPressed: logout,
+        //       icon: const Icon(Icons.logout),
+        //     ),
+        // ],
       ),
-      drawer: AppDrawer(),
+      // drawer: AppDrawer(),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Login/Signup or Welcome Section
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Card(
-                      elevation: 0,
-                      color: AppTheme.cardColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: username == null
-                            ? Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'ברוכים הבאים, שמחים שבאת!',
-                                    style: AppTheme.h2,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      ElevatedButton.icon(
-                                        onPressed: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => LoginScreen()),
-                                        ),
-                                        icon: const Icon(Icons.login),
-                                        label: const Text('Login'),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: AppTheme.cardColor,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 12),
-                                        ),
-                                      ),
-                                      ElevatedButton.icon(
-                                        onPressed: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => SignUpScreen()),
-                                        ),
-                                        icon: const Icon(Icons.person_add),
-                                        label: const Text('Sign Up'),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: AppTheme.cardColor,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 12),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            : Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'שלום, $username!',
-                                      style: AppTheme.h2,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const SizedBox(height: 16),
-                                    ElevatedButton.icon(
-                                      onPressed: () async {
-                                        final prefs = await SharedPreferences.getInstance();
-                                        final token =
-                                            prefs.getString('token'); // Retrieve the saved token
-                                        if (token != null) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => ProfileScreen(
-                                                    token: token,
-                                                    onBackToHome: () {
-                                                      Navigator.pushNamedAndRemoveUntil(
-                                                        context,
-                                                        '/', // Navigate to home
-                                                        (route) => false, // Remove all previous routes
-                                                      );
-                                                    })),
-                                          );
-                                        }
-                                      },
-                                      icon: const Icon(Icons.account_circle),
-                                      label: const Text('Go to Profile'),
-                                      style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 12),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Login/Signup or Welcome Section
+                HomeSearch(),
 
-                  // Chat Section
-                  const SizedBox(height: 8),
-                  ChatQuery(title: 'קבוצות חדשות', query: 'sort=recent&limit=10'),
+                const SizedBox(height: 16),
 
-                  const SizedBox(height: 16),
+                HomeMiniNav(),
 
-                  // Deal Section
-                  const SizedBox(height: 8),
-                  DealQuery(title: 'הטבות חדשות', query: 'sort=recent&limit=10'),
-                ],
-              )
+                const SizedBox(height: 16),
 
-            ),
+                // Chat Section
+                // const SizedBox(height: 8),
+                ChatQuery(title: 'קבוצות חדשות', query: 'sort=recent&limit=10'),
+
+                const SizedBox(height: 16),
+
+                // Deal Section
+                // const SizedBox(height: 8),
+                DealQuery(title: 'הטבות חדשות', query: 'sort=recent&limit=10'),
+              ],
+            )),
+      // bottomNavigationBar: AppNavbar(context: context, selectedIndex: 0),
     );
   }
 }
+
+

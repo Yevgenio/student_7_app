@@ -27,7 +27,7 @@ class AppDrawer extends StatelessWidget {
       children: <Widget>[
         drawerHeader,
         ListTile(
-          title: const Text('To page 1'),
+          title: const Text('עלינו'),
           onTap: () => Navigator.of(context).push(_NewPage(1)),
         ),
         ListTile(
@@ -35,7 +35,7 @@ class AppDrawer extends StatelessWidget {
           onTap: () => Navigator.of(context).push(_NewPage(2)),
         ),
         ListTile(
-          title: const Text('other drawer item'),
+          title: const Text('לאתר הבית'),
           onTap: () {},
         ),
       ],

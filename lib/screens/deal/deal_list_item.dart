@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_7_app/widgets/cached_image.dart';
 import '../../config.dart'; // Import AppTheme for styling
 
 class DealListItem extends StatelessWidget {
@@ -47,17 +48,11 @@ class DealListItem extends StatelessWidget {
               // Top Section: Image
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
-                child: Image.network(
-                  imageUrl,
+                child: CachedImage(
+                  imagePath: imageUrl,
                   height: 150,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 150,
-                    color: Colors.grey[300],
-                    child: const Center(
-                        child: Icon(Icons.image, color: Colors.grey)),
-                  ),
                 ),
               ),
               // Bottom Section: Text

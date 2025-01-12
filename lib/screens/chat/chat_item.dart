@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_7_app/widgets/cached_image.dart';
 
 class ChatListItem extends StatelessWidget {
   final String title;
@@ -48,12 +49,11 @@ class ChatListItem extends StatelessWidget {
             const SizedBox(width: 16),
             // Image Section
             ClipOval(
-              child: Image.network(
-                imagePath,
+              child: CachedImage(
+                imagePath: imagePath,
                 width: 40,
                 height: 40,
                 fit: BoxFit.cover,
-                
               ),
             ),
             const SizedBox(width: 16),

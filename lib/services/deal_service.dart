@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'image_service.dart';
 import '../config.dart';
 
 class DealService {
-  final String baseUrl = '${Config.apiBaseUrl}/api/deals';
-  final String uploadUrl = '${Config.apiBaseUrl}/api/uploads';
+  final String baseUrl = '${ServerAPI.baseUrl}/api/deals';
 
   Future<List<dynamic>> fetchDeals() async {
     final response = await http.get(Uri.parse(baseUrl));
@@ -12,16 +12,11 @@ class DealService {
       final data = jsonDecode(response.body);
       // Update image paths to include the full API URL
       for (var item in data) {
-        if (item['imagePath'] != null) {
-          item['imagePath'] = '$uploadUrl/${item['imagePath']}';
-        } else {
-          item['imagePath'] = '$uploadUrl/default';
-        }
-        if (item['barcodePath'] != null) {
-          item['barcodePath'] = '$uploadUrl/${item['barcodePath']}';
-        } else {
-          item['barcodePath'] = '$uploadUrl/default';
-        }
+        item['imagePath'] =
+            await ImageService.getProcessedImageUrl(item['imagePath']);
+
+        item['barcodePath'] =
+            await ImageService.getProcessedImageUrl(item['barcodePath']);
       }
       return data;
     } else {
@@ -34,12 +29,10 @@ class DealService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       // Update image paths to include the full API URL
-      if (data['imagePath'] != null) {
-        data['imagePath'] = '$uploadUrl/${data['imagePath']}';
-      }
-      if (data['barcodePath'] != null) {
-        data['barcodePath'] = '$uploadUrl/${data['barcodePath']}';
-      }
+      data['imagePath'] =
+          await ImageService.getProcessedImageUrl(data['imagePath']);
+      data['barcodePath'] =
+          await ImageService.getProcessedImageUrl(data['barcodePath']);
       return data;
     } else {
       throw Exception('Failed to load this deal');
@@ -55,17 +48,10 @@ class DealService {
         final data = decodedResponse['data'];
         // Update image paths to include the full API URL
         for (var item in data) {
-          if (item['imagePath'] != null) {
-            item['imagePath'] = '$uploadUrl/${item['imagePath']}';
-          } else {
-            item['imagePath'] = '$uploadUrl/default';
-          }
-
-          if (item['barcodePath'] != null) {
-            item['barcodePath'] = '$uploadUrl/${item['barcodePath']}';
-          } else {
-            item['barcodePath'] = '$uploadUrl/default';
-          }
+          item['imagePath'] =
+              await ImageService.getProcessedImageUrl(item['imagePath']);
+          item['barcodePath'] =
+              await ImageService.getProcessedImageUrl(item['barcodePath']);
         }
         return data;
       } else {
@@ -93,7 +79,7 @@ class DealService {
     return fetchDealsByQuery('category=$category&limit=10');
   }
 
-    // GET deals by categories
+  // GET deals by categories
   Future<List<dynamic>> fetchDealsByCategoryAll(String category) async {
     return fetchDealsByQuery('category=$category');
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../config.dart';
-import 'deal_catalog_item.dart';
+import 'deal_query_item.dart';
 import 'deal_list.dart'; // Import the new DealCard file
 import '../../services/deal_service.dart';
 
@@ -85,7 +85,7 @@ class _DealQueryState extends State<DealQuery> with AutomaticKeepAliveClientMixi
                         itemCount: deals.length,
                         itemBuilder: (context, index) {
                           final deal = deals[index];
-                          return DealCatalogItem(
+                          return DealQueryItem(
                             imageUrl: deal['imagePath'] ?? 'default',
                             name: deal['name'] ?? 'New Deal',
                             description: deal['description'] ?? '',

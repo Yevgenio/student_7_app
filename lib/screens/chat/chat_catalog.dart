@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:accordion/accordion.dart';
+import 'package:student_7_app/layout/app_nav.dart';
 import '../../services/chat_service.dart';
 import 'chat_details_screen.dart';
 import '../../config.dart';
 import '../../layout/app_bar.dart';
 import 'chat_item.dart';
 
-class ChatList extends StatefulWidget {
-  final VoidCallback onBackToHome;
+class ChatCatalog extends StatefulWidget {
+  // final VoidCallback onBackToHome;
 
-  const ChatList({required this.onBackToHome, Key? key}) : super(key: key);
+  // const ChatCatalog({required this.onBackToHome, Key? key}) : super(key: key);
+  const ChatCatalog({super.key});
 
   @override
-  _ChatListState createState() => _ChatListState();
+  _ChatCatalogState createState() => _ChatCatalogState();
 }
 
-class _ChatListState extends State<ChatList> {
+class _ChatCatalogState extends State<ChatCatalog> {
   final ChatService chatService = ChatService();
   Map<String, List<dynamic>> groupedChat = {}; // Groups by category
   bool isLoading = true;
@@ -58,12 +60,8 @@ class _ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: 'קבוצות',
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: widget.onBackToHome, 
-        ),
+      appBar: const CustomAppBar(
+        title: 'קבוצות'
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -113,6 +111,7 @@ class _ChatListState extends State<ChatList> {
                 );
               }).toList(),
             ),
+    // bottomNavigationBar: AppNavbar(context: context, selectedIndex: 1),
     );
   }
 }

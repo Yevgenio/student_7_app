@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:student_7_app/layout/app_bar.dart';
+import 'package:student_7_app/layout/app_nav.dart';
 
 import '../../services/deal_service.dart';
 import 'deal_query.dart'; // Import the new DealCard file
 
 class DealCatalog extends StatefulWidget {
-  final VoidCallback onBackToHome;
 
-  const DealCatalog({required this.onBackToHome, Key? key}) : super(key: key);
+  const DealCatalog({super.key});
 
   @override
   _DealCatalogState createState() => _DealCatalogState();
@@ -44,10 +44,6 @@ class _DealCatalogState extends State<DealCatalog> {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'עמוד ההטבות',
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: widget.onBackToHome,
-        ),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -59,6 +55,7 @@ class _DealCatalogState extends State<DealCatalog> {
                 return DealQuery(title: title, query: "category=$category");
               },
             ),
+    // bottomNavigationBar: AppNavbar(context: context, selectedIndex: 2),
     );
   }
 }

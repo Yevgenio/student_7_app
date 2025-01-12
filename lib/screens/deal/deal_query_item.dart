@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:student_7_app/widgets/cached_image.dart';
 import '../../config.dart'; // Import AppTheme for styling
 
-class DealCatalogItem extends StatelessWidget {
+class DealQueryItem extends StatelessWidget {
   final String imageUrl;
   final String name;
   final String description;
@@ -9,13 +10,15 @@ class DealCatalogItem extends StatelessWidget {
   final double width; // Allow customization if needed
   final double height;
 
-  const DealCatalogItem({
+  const DealQueryItem({
     required this.imageUrl,
     required this.name,
     required this.description,
     required this.dealId,
     this.width = 152, // Default width
     this.height = 212, // Default height
+    //    this.width = 250, // Default width
+    //    this.height = 400, // Default height
     Key? key,
   }) : super(key: key);
 
@@ -47,17 +50,11 @@ class DealCatalogItem extends StatelessWidget {
               // Top Section: Image
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
-                child: Image.network(
-                  imageUrl,
+                child: CachedImage(
+                  imagePath: imageUrl,
                   height: 120,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 144,
-                    color: Colors.grey[300],
-                    child: const Center(
-                        child: Icon(Icons.image, color: Colors.grey)),
-                  ),
                 ),
               ),
               // Bottom Section: Text

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class Config {
+class ServerAPI {
   // static const String apiBaseUrl = 'http://localhost:5000'; // localhost
   // static const String apiBaseUrl = 'http://51.84.9.120'; // my server
   // static const String apiBaseUrl = 'http://51.16.37.75'; // student-7
-  static const String apiBaseUrl =
+  static const String baseUrl =
       'https://student-7.boukingolts.art'; // student-7
   // static const int color_promary = #19276F;
 }

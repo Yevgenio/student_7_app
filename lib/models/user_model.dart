@@ -1,7 +1,7 @@
 import '../config.dart';
 
 class User {
-  static const String uploadUrl = '${Config.apiBaseUrl}/api/uploads';
+  static const String uploadUrl = '${ServerAPI.baseUrl}/api/uploads';
 
   final String username;
   final String email;

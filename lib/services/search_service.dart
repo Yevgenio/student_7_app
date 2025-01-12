@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../config.dart';
+import 'image_service.dart';
 
 class SearchService {
-  final String baseUrl = '${Config.apiBaseUrl}/api/search';
-  final String uploadUrl = '${Config.apiBaseUrl}/api/uploads';
+  final String baseUrl = '${ServerAPI.baseUrl}/api/search';
 
   // Fetch results for global search
   Future<Map<String, List<dynamic>>> fetchGlobalSearchResults(String query, {String? type}) async {
@@ -16,8 +16,8 @@ class SearchService {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final deals = _processImagePaths(data['deals'] ?? []);
-      final chats = _processImagePaths(data['chats'] ?? []);
+      final deals = await _processImagePaths(data['deals'] ?? []);
+      final chats = await _processImagePaths(data['chats'] ?? []);
 
       return {
         'deals': deals,
@@ -35,13 +35,10 @@ class SearchService {
   }
 
   // Process image paths for results
-  List<dynamic> _processImagePaths(List<dynamic> items) {
+  Future<List> _processImagePaths(List<dynamic> items) async {
     for (var item in items) {
-      if (item['imagePath'] != null) {
-        item['imagePath'] = '$uploadUrl/${item['imagePath']}';
-      } else {
-        item['imagePath'] = '$uploadUrl/default';
-      }
+      item['imagePath'] = await ImageService.getProcessedImageUrl(item['imagePath']);
+      item['barcodePath'] = await ImageService.getProcessedImageUrl(item['barcodePath']);
     }
     return items;
   }

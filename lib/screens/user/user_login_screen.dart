@@ -4,6 +4,8 @@ import '../../services/auth_service.dart';
 // import '../home/home_screen.dart';
 import '../../layout/app_nav.dart';
 
+import 'package:google_sign_in/google_sign_in.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -17,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String email = '';
   String password = '';
   bool isLoading = false;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   void login() async {
     if (_formKey.currentState!.validate()) {
@@ -25,15 +28,16 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
-        final token = await authService.login(email, password);
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', token);
+        // final token = await authService.login(email, password);
+        // final prefs = await SharedPreferences.getInstance();
+        // await prefs.setString('token', token);
+        await authService.login(email, password);
 
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/',
-        (route) => false, // Remove all previous routes
-      );
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/',
+          (route) => false, // Remove all previous routes
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),
@@ -76,6 +80,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: login,
                       child: const Text('Login'),
                     ),
+                    // ElevatedButton.icon(
+                    //   icon: Icon(Icons.login),
+                    //   label: Text('Sign in with Google'),
+                    //   onPressed: () async {
+                    //     try {
+                    //       final token = await authService.googleSignIn();
+                    //       if (token != null) {
+                    //         await authService.loginWithGoogle(token); // Send token to backend
+                    //         Navigator.pushNamed(context, '/home');
+                    //       } else {
+                    //         ScaffoldMessenger.of(context).showSnackBar(
+                    //           SnackBar(content: Text('Google sign-in canceled')),
+                    //         );
+                    //       }
+                    //     } catch (e) {
+                    //       ScaffoldMessenger.of(context).showSnackBar(
+                    //         SnackBar(content: Text(e.toString())),
+                    //       );
+                    //     }
+                    //   },
+                    // ),
+
             ],
           ),
         ),

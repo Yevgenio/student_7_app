@@ -23,6 +23,7 @@ class ChatQueryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print("chat tapped");
         Navigator.pushNamed(
           context,
           '/chatDetails',
@@ -47,8 +48,8 @@ class ChatQueryItem extends StatelessWidget {
               // Top Section: Image
               // ClipRRect(
               //   borderRadius: const BorderRadius.all(Radius.circular(8)),
-              //   child: Image.network(
-              //     imageUrl,
+              //   child: CachedImage(
+              //     imageUrl: imageUrl,
               //     height: 50,
               //     width: 50,
               //     fit: BoxFit.cover,
