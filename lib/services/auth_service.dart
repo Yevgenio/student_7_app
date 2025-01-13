@@ -1,49 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../config.dart';
 import '../models/user_model.dart';
-import 'package:google_sign_in/google_sign_in.dart'; // Import GoogleSignIn
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final String baseUrl = '${ServerAPI.baseUrl}/api/auth';
-
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: '148902254409-uq64ellll31au13423122frfb7cjalnd.apps.googleusercontent.com',
-  );
-
-  Future<String?> googleSignIn() async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null;
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final idToken = googleAuth.idToken;
-
-      return idToken; // Return Google ID Token
-    } catch (e) {
-      throw Exception('Failed to sign in with Google: $e');
-    }
-  }
-
-  Future<void> loginWithGoogle(String idToken) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/google-login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'googleToken': idToken}),
-    );
-
-    if (response.statusCode == 200) {
-      final prefs = await SharedPreferences.getInstance();
-      final data = jsonDecode(response.body);
-
-      // Store tokens (if needed)
-      await prefs.setString('token', data['token']);
-      await prefs.setString('refreshToken', data['refreshToken']);
-    } else {
-      throw Exception(jsonDecode(response.body)['message']);
-    }
-  }
 
   Future<void> signUp(String username, String email, String password) async {
     final response = await http.post(
@@ -61,14 +25,11 @@ class AuthService {
     }
   }
 
-  Future<String> login(String email, String password) async {
+  Future<Map<String, String>> login(String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-      }),
+      body: jsonEncode({'email': email, 'password': password}),
     );
 
     if (response.statusCode == 200) {
@@ -78,16 +39,26 @@ class AuthService {
       await prefs.setString('token', data['token']);
       await prefs.setString('refreshToken', data['refreshToken']);
 
-      return data['token']; // Return JWT token
+      return {'token': data['token'], 'refreshToken': data['refreshToken']};
     } else {
       throw Exception(jsonDecode(response.body)['message']);
     }
   }
 
-void logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    await prefs.remove('refreshToken');
+void logout(BuildContext context) async {
+  final prefs = await SharedPreferences.getInstance();
+
+  // Clear the tokens from SharedPreferences
+  await prefs.remove('token');
+  await prefs.remove('refreshToken');
+  await prefs.remove('username'); // Optional if storing username
+
+  // Sign out from Google
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+  await googleSignIn.signOut();
+
+  // Navigate to the home screen or authentication screen
+  Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
 }
 
 

@@ -111,7 +111,7 @@ class _ChatCatalogState extends State<ChatCatalog> {
                 );
               }).toList(),
             ),
-    // bottomNavigationBar: AppNavbar(context: context, selectedIndex: 1),
+    bottomNavigationBar: AppNavbar(context: context, selectedIndex: 1),
     );
   }
 }

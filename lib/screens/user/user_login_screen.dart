@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
 // import '../home/home_screen.dart';
@@ -52,59 +53,71 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
+    return
+    // Scaffold(
+      //appBar: AppBar(title: const Text('Login')),
+      // body: Padding(
+      //   padding: const EdgeInsets.all(16.0),
+        //child: 
+        Form(
           key: _formKey,
           child: Column(
             children: [
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: InputDecoration(
+                  hintText: 'אימייל',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                ),
                 onChanged: (value) => email = value,
-                validator: (value) =>
-                    value!.isEmpty ? 'Email is required' : null,
+                validator: (value) => value!.isEmpty ? 'נא להזין אימייל' : null,
               ),
+              const SizedBox(height: 16),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: InputDecoration(
+                  hintText: 'סיסמה',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                ),
                 obscureText: true,
                 onChanged: (value) => password = value,
-                validator: (value) =>
-                    value!.isEmpty ? 'Password is required' : null,
+                validator: (value) => value!.isEmpty ? 'נא להזין סיסמה' : null,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
               isLoading
                   ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: login,
-                      child: const Text('Login'),
-                    ),
-                    ElevatedButton.icon(
-                      icon: Icon(Icons.login),
-                      label: Text('Sign in with Google'),
-                      onPressed: () async {
-                        try {
-                          final token = await authService.googleSignIn();
-                          if (token != null) {
-                            await authService.loginWithGoogle(token); // Send token to backend
-                            Navigator.pushNamed(context, '/home');
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Google sign-in canceled')),
-                            );
-                          }
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(e.toString())),
-                          );
-                        }
-                      },
-                    ),
-
+                  : _buildLoginButton()
             ],
           ),
-        ),
+     //   ),
+    //  ),
+      );
+  }
+  
+  Widget _buildLoginButton() {
+    return SizedBox( width: double.infinity, height: 50, // Full-width button
+      child: SignInButton(
+        Buttons.Email,
+        text: "התחברות",
+        onPressed: () {
+          login;
+        },
       ),
     );
   }

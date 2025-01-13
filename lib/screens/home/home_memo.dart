@@ -59,7 +59,7 @@ class _HomeMemoState extends State<HomeMemo> {
   }
 
   void logout() async {
-    authService.logout();
+    authService.logout(context);
     setState(() {
       username = null;
     });

@@ -7,6 +7,7 @@ import 'package:student_7_app/layout/app_nav.dart';
 import 'package:student_7_app/screens/chat/chat_screen.dart';
 import 'package:student_7_app/screens/home/home_mininav.dart';
 import 'package:student_7_app/screens/home/home_search.dart';
+import 'package:student_7_app/widgets/login_widget.dart';
 import 'home_memo.dart';
 import '../../layout/app_bar.dart';
 
@@ -62,38 +63,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'סטודנט 7',
-        // actions: [
-        //   if (username == null)
-        //     TextButton(
-        //       onPressed: () => Navigator.push(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => LoginScreen()),
-        //       ),
-        //       child: const Text('התחבר', style: AppTheme.label),
-        //     )
-        //   else
-        //     TextButton(
-        //       onPressed: () async {
-        //         final prefs = await SharedPreferences.getInstance();
-        //         final token =
-        //             prefs.getString('token'); // Retrieve the saved token
-        //         if (token != null) {
-        //           Navigator.push(
-        //             context,
-        //             MaterialPageRoute(builder: (context) => ProfileScreen()),
-        //           );
-        //         }
-        //       },
-        //       child: const Text('פרופיל', style: AppTheme.label),
-        //     ),
-        //   if (username != null)
-        //     IconButton(
-        //       onPressed: logout,
-        //       icon: const Icon(Icons.logout),
-        //     ),
-        // ],
+        actions: [
+          LoginWidget(),
+        ],
       ),
       // drawer: AppDrawer(),
       body: isLoading
@@ -122,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 DealQuery(title: 'הטבות חדשות', query: 'sort=recent&limit=10'),
               ],
             )),
-      // bottomNavigationBar: AppNavbar(context: context, selectedIndex: 0),
+      bottomNavigationBar: AppNavbar(context: context, selectedIndex: 0),
     );
   }
 }

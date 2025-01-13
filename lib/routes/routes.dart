@@ -5,6 +5,7 @@ import 'package:student_7_app/screens/deal/deal_details_screen.dart';
 import 'package:student_7_app/screens/deal/deal_screen.dart';
 import 'package:student_7_app/screens/home/home_screen.dart';
 import 'package:student_7_app/screens/search/search_screen.dart';
+import 'package:student_7_app/screens/user/auth_selection_screen.dart';
 import 'package:student_7_app/screens/user/user_profile_screen.dart';
 import 'package:student_7_app/screens/user/user_login_screen.dart';
 import 'package:student_7_app/screens/user/user_signup_screen.dart';
@@ -15,6 +16,7 @@ Map<String, WidgetBuilder> appRoutes = {
   // '/profile': (context) => ProfileScreen(token: '',),
   '/login': (context) => const LoginScreen(),
   '/signup': (context) => SignUpScreen(),
+  '/auth-selection': (context) => const AuthSelectionScreen(),
 
   '/': (context) => const HomeScreen(),
   '/chat': (context) => const ChatScreen(),

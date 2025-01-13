@@ -111,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       if (user!.role == "admin")
                         Chip(
                           label: Text(
-                            'Admin',
+                            'אדמין',
                             style: const TextStyle(color: Colors.white),
                           ),
                           backgroundColor: const Color(0xFF39A7EE),
@@ -127,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 // Handle Edit Profile
                               },
                               icon: const Icon(Icons.edit),
-                              label: const Text('Edit Profile'),
+                              label: const Text('עריכת פרופיל'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF19276F),
                                 shape: RoundedRectangleBorder(
@@ -142,12 +142,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(height: 10),
                             OutlinedButton.icon(
                               onPressed: () {
-                                authService.logout();
+                                authService.logout(context);
                               },
                               icon: const Icon(Icons.logout,
                                   color: Color(0xFF19276F)),
                               label: const Text(
-                                'Logout',
+                                'התנתק',
                                 style: TextStyle(color: Color(0xFF19276F)),
                               ),
                               style: OutlinedButton.styleFrom(

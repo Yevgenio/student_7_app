@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void logout() async {
-    authService.logout();
+    authService.logout(context);
     setState(() {
       username = null;
     });
