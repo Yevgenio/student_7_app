@@ -111,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
   
   Widget _buildLoginButton() {
-    return SizedBox( width: double.infinity, height: 50, // Full-width button
+    return FittedBox(// width: double.infinity, height: 50, // Full-width button
       child: SignInButton(
         Buttons.Email,
         text: "התחברות",

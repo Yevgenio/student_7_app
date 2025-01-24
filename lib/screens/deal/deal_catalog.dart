@@ -55,7 +55,7 @@ class _DealCatalogState extends State<DealCatalog> {
                 return DealQuery(title: title, query: "category=$category");
               },
             ),
-    bottomNavigationBar: AppNavbar(context: context, selectedIndex: 2),
+    // bottomNavigationBar: AppNavbar(context: context, selectedIndex: 2),
     );
   }
 }

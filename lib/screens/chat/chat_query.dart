@@ -45,7 +45,7 @@ class _ChatQueryState extends State<ChatQuery> with AutomaticKeepAliveClientMixi
         return isLoading
         ? const Center(child: CircularProgressIndicator())
         : chats.isEmpty
-            ? const Center(child: Text('אין הטבות'))
+            ? const Center(child: Text('אין קבוצות'))
             : Padding(
                 padding: const EdgeInsets.all(AppTheme.itemPadding),
                 child: Column(

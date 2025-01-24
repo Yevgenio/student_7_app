@@ -66,6 +66,7 @@ class _AppLayoutState extends State<AppLayout> {
         );
       },
     ),
+    HomeScreen(),
     ChatScreen(),
     DealScreen(),
     SearchScreen(),
@@ -109,13 +110,6 @@ class _AppLayoutState extends State<AppLayout> {
           body: IndexedStack(
             index: _selectedIndex,
             children: _pages.map((page) {
-              if (page is Placeholder && _selectedIndex == 4) {
-                // Handle ProfileScreen navigation manually
-                return token != null
-                    ? ProfileScreen()
-                    : const Center(
-                        child: Text('Please log in to view your profile.'));
-              }
               return page;
             }).toList(),
           ),

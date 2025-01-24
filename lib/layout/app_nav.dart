@@ -24,47 +24,21 @@ import '../screens/search/search_screen.dart';
 // import '../screens/user/user_profile_screen.dart';
 
 class AppNavbar extends StatelessWidget {
-  final BuildContext context;
   final int selectedIndex;
+  final ValueChanged<int> onTap;
 
   const AppNavbar({
     Key? key,
-    required this.context,
     required this.selectedIndex,
+    required this.onTap,
   }) : super(key: key);
-
-  void _navigateTo(BuildContext context, Widget screen) {
-    Navigator.popUntil(context, (route) => route.isFirst);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => screen),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
       backgroundColor: AppTheme.cardColor,
       selectedIndex: selectedIndex,
-      onDestinationSelected: (index) {
-        switch (index) {
-          case 0:
-            Navigator.popUntil(context, (route) => route.isFirst);
-            break;
-          case 1:
-            _navigateTo(context, const ChatCatalog());
-            break;
-          case 2:
-            _navigateTo(context, const DealCatalog());
-            break;
-          case 3:
-            _navigateTo(context, const SearchScreen());
-            break;
-          case 4:
-            _navigateTo(context, const ProfileScreen()); // Replace token if needed
-            break;
-        }
-      },
+      onDestinationSelected: onTap,
       destinations: [
         NavigationDestination(
           selectedIcon: AppIcons.homeSolid(),
@@ -95,3 +69,4 @@ class AppNavbar extends StatelessWidget {
     );
   }
 }
+

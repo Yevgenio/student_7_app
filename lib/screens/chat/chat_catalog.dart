@@ -22,7 +22,7 @@ class _ChatCatalogState extends State<ChatCatalog> {
   Map<String, List<dynamic>> groupedChat = {}; // Groups by category
   bool isLoading = true;
 
-  @override
+  
   void initState() {
     super.initState();
     fetchChat();
@@ -111,7 +111,7 @@ class _ChatCatalogState extends State<ChatCatalog> {
                 );
               }).toList(),
             ),
-    bottomNavigationBar: AppNavbar(context: context, selectedIndex: 1),
+    // bottomNavigationBar: AppNavbar(context: context, selectedIndex: 1),
     );
   }
 }

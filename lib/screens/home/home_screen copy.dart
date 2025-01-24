@@ -243,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 DealQuery(title: 'הטבות חדשות', query: 'sort=recent&limit=10'),
               ],
             )),
-      bottomNavigationBar: AppNavbar(context: context, selectedIndex: 0),
+      // bottomNavigationBar: AppNavbar(context: context, selectedIndex: 0),
     );
   }
 }

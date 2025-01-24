@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:student_7_app/layout/shared_scaffold.dart';
 import 'package:student_7_app/routes/routes.dart'; // Import the routes file
 import 'package:student_7_app/layout/app_nav.dart';
 import 'config.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized(); // Initialize plugins
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized(); // Initialize plugins
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(MyApp());
 }
 
@@ -26,9 +29,8 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       // home: const AppLayout(),
-      // routes: appRoutes,
       initialRoute: '/',
-      routes: appRoutes
+      routes: appRoutes, // Include all defined app routes
     );
   }
 }

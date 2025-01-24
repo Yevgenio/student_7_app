@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:student_7_app/services/cache_manager.dart';
@@ -29,32 +32,44 @@ class CachedImage extends StatelessWidget {
   //       color: Colors.grey[300],
   //       child: const Center(child: Icon(Icons.image, color: Colors.grey)),
   //     ),
-  //   );
+  //   );KiSw
   // }
 
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: imagePath,
-      placeholder: (context, url) {
-        print("Loading placeholder for $url");
-        return const Center(child: CircularProgressIndicator());
-      },
-      errorWidget: (context, url, error) {
-        print("Error loading $url: $error");
-        return const Icon(Icons.error);
-      },
-      imageBuilder: (context, imageProvider) {
-        print("Successfully loaded from cache or network: $imagePath");
-        return Image(
-          image: imageProvider,
-          width: width,
-          height: height,
-          fit: fit,
-        );
-      },
-      cacheManager:
-          CustomImageCacheManager.instance, // Optional for custom caching
-    );
+    return kIsWeb
+        ? Image.network(
+            imagePath,
+            height: height,
+            width: width,
+            fit: fit,
+            errorBuilder: (context, error, stackTrace) => Container(
+              height: height,
+              color: Colors.grey[300],
+              child: const Center(child: Icon(Icons.image, color: Colors.grey)),
+            ),
+          )
+        : CachedNetworkImage(
+            imageUrl: imagePath,
+            placeholder: (context, url) {
+              //print("Loading placeholder for $url");
+              return const Center(child: CircularProgressIndicator());
+            },
+            errorWidget: (context, url, error) {
+              //print("Error loading $url: $error");
+              return const Icon(Icons.error);
+            },
+            imageBuilder: (context, imageProvider) {
+              //print("Successfully loaded from cache or network: $imagePath");
+              return Image(
+                image: imageProvider,
+                width: width,
+                height: height,
+                fit: fit,
+              );
+            },
+            cacheManager:
+                CustomImageCacheManager.instance, // Optional for custom caching
+          );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_7_app/layout/shared_scaffold.dart';
 import 'package:student_7_app/screens/chat/chat_details_screen.dart';
 import 'package:student_7_app/screens/chat/chat_screen.dart';
 import 'package:student_7_app/screens/deal/deal_details_screen.dart';
@@ -18,7 +19,9 @@ Map<String, WidgetBuilder> appRoutes = {
   '/signup': (context) => SignUpScreen(),
   '/auth-selection': (context) => const AuthSelectionScreen(),
 
-  '/': (context) => const HomeScreen(),
+  
+  '/': (context) => const SharedScaffold(),
+  '/home': (context) => const HomeScreen(),
   '/chat': (context) => const ChatScreen(),
   '/deals': (context) => const DealScreen(),
   '/search': (context) => const SearchScreen(),

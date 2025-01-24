@@ -199,8 +199,8 @@ class _DealDetailsScreenState extends State<DealDetailsScreen> {
       },
     );
 
-    return RichText(
-      text: TextSpan(children: spans),
+    return SelectableText.rich(
+      TextSpan(children: spans),
     );
   }
 }

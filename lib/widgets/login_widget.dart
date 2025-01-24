@@ -23,7 +23,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     _fetchUsername();
   }
 
-Future<void> _fetchUsername() async {
+  Future<void> _fetchUsername() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     final refreshToken = prefs.getString('refreshToken');
@@ -67,6 +67,17 @@ Future<void> _fetchUsername() async {
     return GestureDetector(
       onTap: () {
         if (username == null) {
+            // showDialog<String>(
+            // context: context,
+            // builder: (context) => AlertDialog(
+            //   contentPadding: EdgeInsets.zero,
+            //   // insetPadding: EdgeInsets.zero,
+            //   content: SizedBox(
+            //     width: double.maxFinite,
+            //     child: const AuthSelectionScreen(),
+            //   ),
+            // ),
+            // );
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AuthSelectionScreen()),

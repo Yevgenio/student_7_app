@@ -15,7 +15,7 @@ class DealQueryItem extends StatelessWidget {
     required this.name,
     required this.description,
     required this.dealId,
-    this.width = 152, // Default width
+    this.width = 250, // Default width
     this.height = 212, // Default height
     //    this.width = 250, // Default width
     //    this.height = 400, // Default height

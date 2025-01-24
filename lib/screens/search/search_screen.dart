@@ -119,9 +119,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   style: TextStyle(color: AppTheme.secondaryColor),
                 ),
                 // const SizedBox(height: 16),
-                Row(
+                Wrap(
                   children: [
-                    Text(
+                    const Text(
                       "סוג תוצאות:",
                       style: TextStyle(color: AppTheme.primaryColor),
                     ),
