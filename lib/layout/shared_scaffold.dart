@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_7_app/layout/app_icons.dart';
 import 'package:student_7_app/layout/app_nav.dart';
+import 'package:student_7_app/models/user_model.dart';
+import 'package:student_7_app/providers/auth_provider.dart';
 import 'package:student_7_app/routes/routes.dart';
 import 'package:student_7_app/screens/chat/chat_catalog.dart';
 import 'package:student_7_app/screens/chat/chat_details_screen.dart';
@@ -9,8 +12,10 @@ import 'package:student_7_app/screens/deal/deal_catalog.dart';
 import 'package:student_7_app/screens/deal/deal_details_screen.dart';
 import 'package:student_7_app/screens/home/home_screen.dart';
 import 'package:student_7_app/screens/search/search_screen.dart';
+import 'package:student_7_app/screens/user/auth_selection_screen.dart';
 import 'package:student_7_app/screens/user/user_profile_screen.dart';
-
+import 'package:student_7_app/services/auth_service.dart';
+import 'package:provider/provider.dart';
 class SharedScaffold extends StatefulWidget {
   const SharedScaffold({Key? key}) : super(key: key);
 
@@ -20,6 +25,8 @@ class SharedScaffold extends StatefulWidget {
 
 class _SharedScaffoldState extends State<SharedScaffold> {
   int _selectedIndex = 0;
+  final AuthService authService = AuthService();
+  User? user;
 
   @override
   void initState() {
@@ -28,11 +35,14 @@ class _SharedScaffoldState extends State<SharedScaffold> {
   }
 
   void initialization() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    await authProvider.fetchUser();
+  //  await _fetchUserState();
     // This is where you can initialize the resources needed by your app while
     // the splash screen is displayed.  Remove the following example because
     // delaying the user experience is a bad design practice!
     // ignore_for_file: avoid_print
-    await Future.delayed(const Duration(seconds: 3));
+    //await Future.delayed(const Duration(seconds: 3));
     FlutterNativeSplash.remove();
   }
 
@@ -60,6 +70,9 @@ class _SharedScaffoldState extends State<SharedScaffold> {
   }
 
   Widget _buildOffstageNavigator(int index) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    user = authProvider.user;
+
     return Offstage(
       offstage: _selectedIndex != index,
       child: Navigator(
@@ -68,36 +81,43 @@ class _SharedScaffoldState extends State<SharedScaffold> {
           if (settings.name == '/chatDetails') {
             final chatId = settings.arguments as String;
             return MaterialPageRoute(
-              builder: (context) =>
-                  ChatDetailsScreen(chatId: chatId),
+              builder: (context) => ChatDetailsScreen(chatId: chatId),
             );
           }
           if (settings.name == '/dealDetails') {
             final dealId = settings.arguments as String;
             return MaterialPageRoute(
-              builder: (context) =>
-                  DealDetailsScreen(dealId: dealId),
+              builder: (context) => DealDetailsScreen(dealId: dealId),
+            );
+          }
+          if (settings.name == '/login') {
+            return MaterialPageRoute(
+              builder: (context) => AuthSelectionScreen(),
             );
           }
           Widget route;
           switch (index) {
             case 0:
-              route = HomeScreen();
+              route = const HomeScreen();
               break;
             case 1:
-              route = ChatCatalog();
+              route = const ChatCatalog();
               break;
             case 2:
-              route = DealCatalog();
+              route = const DealCatalog();
               break;
             case 3:
-              route = SearchScreen();
+              route = const SearchScreen();
               break;
             case 4:
-              route = ProfileScreen();
+              route = const ProfileScreen();
+              // _fetchUserState();
+              // route = user == null
+              //     ? const AuthSelectionScreen() // Redirect to AuthSelectionScreen if not logged in
+              //     : const ProfileScreen();
               break;
             default:
-              route = HomeScreen();
+              route = const HomeScreen();
           }
 
           return MaterialPageRoute(
@@ -109,8 +129,15 @@ class _SharedScaffoldState extends State<SharedScaffold> {
     );
   }
 
-   // Navigation destinations with custom SVG icons
-  final List<NavigationDestination> _destinations = [
+
+@override
+Widget build(BuildContext context) {
+  // _fetchUserState();
+  final authProvider = Provider.of<AuthProvider>(context);
+  user = authProvider.user;
+
+  // Generate destinations dynamically
+  List<NavigationDestination> destinations = <NavigationDestination>[
     NavigationDestination(
       selectedIcon: AppIcons.homeSolid(),
       icon: AppIcons.homeOutline(),
@@ -134,27 +161,25 @@ class _SharedScaffoldState extends State<SharedScaffold> {
     NavigationDestination(
       selectedIcon: AppIcons.profileSolid(),
       icon: AppIcons.profileOutline(),
-      label: 'פרופיל',
+      // Use username if available, otherwise default to 'פרופיל'
+      label: user != null ? 'פרופיל' : 'התחבר',
     ),
   ];
-
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
+  
+  return WillPopScope(
       onWillPop: () async {
-        // Handle back button navigation
+      final isFirstRouteInCurrentTab =
+        !await _navigatorKeys[_selectedIndex].currentState!.maybePop();
+      if (isFirstRouteInCurrentTab) {
         if (_selectedIndex != 0) {
         setState(() {
           _selectedIndex = 0;
         });
         return false; // Prevent default back navigation
-        } else {
-        final isFirstRouteInCurrentTab = !await _navigatorKeys[_selectedIndex].currentState!.maybePop();
-        if (isFirstRouteInCurrentTab) {
-          return true; // Allow default back navigation for the home tab
         }
-        return false; // Prevent default back navigation
-        }
+        return true; // Allow default back navigation for the home tab
+      }
+      return false; // Prevent default back navigation
       },
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -168,57 +193,15 @@ class _SharedScaffoldState extends State<SharedScaffold> {
               (index) => _buildOffstageNavigator(index),
             ),
           ),
-          bottomNavigationBar: 
-          
-          NavigationBar(
+          bottomNavigationBar: NavigationBar(
             selectedIndex: _selectedIndex,
             onDestinationSelected: (int index) {
-               _onTabTapped(index);
+              _onTabTapped(index);
             },
-            destinations: _destinations,
+            destinations: destinations,
           ),
-        
         ),
       ),
     );
-  }
-}
-
-
-class RouteGenerator {
-  static Route<dynamic> generateRoute(RouteSettings settings) {
-    // Getting arguments passed in while calling Navigator.pushNamed
-    final args = settings.arguments;
-
-    switch (settings.name) {
-      case '/':
-        return MaterialPageRoute(builder: (_) => HomeScreen());
-      case '/deals':
-        // Validation of correct data type
-        if (args is String) {
-          return MaterialPageRoute(
-            builder: (_) => DealCatalog(),
-          );
-        }
-        // If args is not of the correct type, return an error page.
-        // You can also throw an exception while in development.
-        return _errorRoute();
-      default:
-        // If there is no such named route in the switch statement, e.g. /third
-        return _errorRoute();
-    }
-  }
-
-  static Route<dynamic> _errorRoute() {
-    return MaterialPageRoute(builder: (_) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Error'),
-        ),
-        body: Center(
-          child: Text('ERROR'),
-        ),
-      );
-    });
   }
 }

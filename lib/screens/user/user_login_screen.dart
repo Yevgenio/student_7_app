@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:student_7_app/config.dart';
 import '../../services/auth_service.dart';
 // import '../home/home_screen.dart';
 import '../../layout/app_nav.dart';
@@ -17,6 +19,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final AuthService authService = AuthService();
+  Map<String, String> userdata = {};
   String email = '';
   String password = '';
   bool isLoading = false;
@@ -32,7 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
         // final token = await authService.login(email, password);
         // final prefs = await SharedPreferences.getInstance();
         // await prefs.setString('token', token);
-        await authService.login(email, password);
+        userdata = await authService.login(context, email, password);
+              // In login flow (where you handle successful login)
 
         Navigator.pushNamedAndRemoveUntil(
           context,
@@ -65,36 +69,50 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: 'אימייל',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    hintText: 'אימייל',
+                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    prefixIcon:
+                        Icon(Icons.email, color: AppTheme.secondaryColor),
+                    filled: true,
+                    fillColor: AppTheme.cardColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: AppTheme.secondaryColor),
+                    ),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                ),
                 onChanged: (value) => email = value,
                 validator: (value) => value!.isEmpty ? 'נא להזין אימייל' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: 'סיסמה',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    hintText: 'סיסמה',
+                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    prefixIcon:
+                        Icon(Icons.key, color: AppTheme.secondaryColor),
+                    filled: true,
+                    fillColor: AppTheme.cardColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: AppTheme.secondaryColor),
+                    ),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                ),
                 obscureText: true,
                 onChanged: (value) => password = value,
                 validator: (value) => value!.isEmpty ? 'נא להזין סיסמה' : null,
@@ -111,14 +129,16 @@ class _LoginScreenState extends State<LoginScreen> {
   }
   
   Widget _buildLoginButton() {
-    return FittedBox(// width: double.infinity, height: 50, // Full-width button
-      child: SignInButton(
-        Buttons.Email,
-        text: "התחברות",
-        onPressed: () {
-          login;
-        },
+    return ElevatedButton(
+      child: Padding(
+        padding: const EdgeInsets.all(AppTheme.itemPadding),
+        child: Text("התחברות", style: TextStyle(color: AppTheme.cardColor
+        )),
       ),
+      
+      onPressed: () {
+        login();
+      },
     );
   }
 }

@@ -76,7 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Login/Signup or Welcome Section
+
+                // HomeMemo(),
+
                 HomeSearch(),
 
                 const SizedBox(height: 16),

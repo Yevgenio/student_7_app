@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:student_7_app/widgets/cached_image.dart';
 import '../../config.dart'; // Import AppTheme for styling
 
-class ChatQueryItem extends StatelessWidget {
+class ChatListItem extends StatelessWidget {
   final String imageUrl;
   final String name;
   final String description;
@@ -10,13 +10,13 @@ class ChatQueryItem extends StatelessWidget {
   final double width; // Allow customization if needed
   final double height;
 
-  const ChatQueryItem({
+  const ChatListItem({
     required this.imageUrl,
     required this.name,
     required this.description,
     required this.chatId,
-    this.width = 200, // Default width
-    this.height = 100, // Default height
+    this.width = 500, // Default width
+    this.height = 250, // Default height
     Key? key,
   }) : super(key: key);
 
@@ -40,24 +40,25 @@ class ChatQueryItem extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppTheme.cardColor,
             boxShadow: [AppTheme.primaryShadow],
-            borderRadius: BorderRadius.circular(48),
+            borderRadius: BorderRadius.circular(8),
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AspectRatio(
-                aspectRatio: 1,  // Ensures 1:1 ratio for perfect circle
-                child: ClipOval(
-                  child: CachedImage(
-                    imagePath: imageUrl,
-                    fit: BoxFit.cover,
-                  ),
+              // Top Section: Image
+              ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                child: CachedImage(
+                  imagePath: imageUrl,
+                  height: 150,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
-              // Text Section
+              // Bottom Section: Text
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 6, left: 6),
+                  padding: const EdgeInsets.only(right: 6, left: 6, top: 4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +68,15 @@ class ChatQueryItem extends StatelessWidget {
                         name,
                         style: AppTheme.label,
                         overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 4),
+                      // Chat Description
+                      Text(
+                        description,
+                        style: AppTheme.p,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ],
                   ),

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_7_app/config.dart';
+import 'package:student_7_app/providers/auth_provider.dart';
 import '../../services/auth_service.dart';
 import 'user_login_screen.dart';
 import 'user_signup_screen.dart';
@@ -29,13 +31,11 @@ class _AuthSelectionScreenState extends State<AuthSelectionScreen> {
     });
 
     try {
-      print('Starting Google Sign-In...');
       final account = await googleSignIn.signIn();
       if (account == null) {
         throw Exception('User canceled the login process');
       }
 
-      print('Google Sign-In successful, retrieving ID token...');
       final authentication = await account.authentication;
       final idToken = authentication.idToken;
 
@@ -43,7 +43,6 @@ class _AuthSelectionScreenState extends State<AuthSelectionScreen> {
         throw Exception('ID Token is null');
       }
 
-      print('Sending ID Token to backend...');
       final response = await http.post(
         Uri.parse('${ServerAPI.baseUrl}/api/auth/google/android'),
         headers: {'Content-Type': 'application/json'},
@@ -52,17 +51,18 @@ class _AuthSelectionScreenState extends State<AuthSelectionScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print('Login successful: $data');
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', data['token']);
         await prefs.setString('refreshToken', data['refreshToken']);
+        // After saving tokens:
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        await authProvider.fetchUser(); // Refresh user state
+
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
       } else {
-        print('Error response from backend: ${response.body}');
         throw Exception('Google login failed: ${response.body}');
       }
     } catch (e) {
-      print('Error during Google Sign-In: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Google login failed: $e')),
       );
@@ -97,8 +97,11 @@ class _AuthSelectionScreenState extends State<AuthSelectionScreen> {
                 ],
               ),
             ),
-            const LoginScreen(),
-            const SizedBox(height: AppTheme.sectionPadding),
+            Padding(
+              padding: const EdgeInsets.all(AppTheme.itemPadding),
+              child: const LoginScreen(),
+            ),
+            const SizedBox(height: AppTheme.itemPadding),
             SizedBox(
               height: AppTheme.sectionPadding,
               child: TextButton(
@@ -123,19 +126,15 @@ class _AuthSelectionScreenState extends State<AuthSelectionScreen> {
   }
 
   Widget _buildGoogleButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: SignInButton(
-        Buttons.Google,
-        text: "כניסה באמצעות Google",
-        onPressed: () {
-          _loginWithGoogle(context);
-        },
-        
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        
-      ),
+    return SignInButton(
+      Buttons.Google,
+      text: "כניסה באמצעות Google",
+      onPressed: () {
+        _loginWithGoogle(context);
+      },
+      
+      // padding: const EdgeInsets.symmetric(vertical: 12),
+      
     );
   }
   // return ElevatedButton.icon(

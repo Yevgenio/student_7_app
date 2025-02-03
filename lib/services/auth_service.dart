@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:student_7_app/providers/auth_provider.dart';
 import 'dart:convert';
 import '../config.dart';
 import '../models/user_model.dart';
@@ -25,7 +27,7 @@ class AuthService {
     }
   }
 
-  Future<Map<String, String>> login(String email, String password) async {
+  Future<Map<String, String>> login(BuildContext context, String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
       headers: {'Content-Type': 'application/json'},
@@ -39,7 +41,10 @@ class AuthService {
       await prefs.setString('token', data['token']);
       await prefs.setString('refreshToken', data['refreshToken']);
 
-      return {'token': data['token'], 'refreshToken': data['refreshToken']};
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.fetchUser(); // Trigger state update
+
+      return {'username': data['username'], 'token': data['token'], 'refreshToken': data['refreshToken']};
     } else {
       throw Exception(jsonDecode(response.body)['message']);
     }
@@ -47,15 +52,18 @@ class AuthService {
 
 void logout(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
-
+  await prefs.clear();
   // Clear the tokens from SharedPreferences
-  await prefs.remove('token');
-  await prefs.remove('refreshToken');
-  await prefs.remove('username'); // Optional if storing username
+  // await prefs.remove('token');
+  // await prefs.remove('refreshToken');
+  // await prefs.remove('username'); // Optional if storing username
 
   // Sign out from Google
   final GoogleSignIn googleSignIn = GoogleSignIn();
   await googleSignIn.signOut();
+
+  final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  authProvider.logout(); // This calls notifyListeners()
 
   // Navigate to the home screen or authentication screen
   Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -92,4 +100,49 @@ void logout(BuildContext context) async {
       throw Exception('Failed to refresh token');
     }
   }
+
+  Future<void> updateUserSettings(String token, Map<String, dynamic> settings) async {
+    final url = Uri.parse('${ServerAPI.baseUrl}/api/user/settings');
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(settings),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update user settings');
+    }
+  }
+
+  // Future<http.Response> secureApiRequest(Future<http.Response> Function(String token) apiCall, BuildContext context) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   String? token = prefs.getString('token');
+  //   String? refreshToken = prefs.getString('refreshToken');
+
+  //   if (token == null || refreshToken == null) {
+  //     Provider.of<AuthProvider>(context, listen: false).logout();
+  //     throw Exception("User not authenticated.");
+  //   }
+
+  //   http.Response response = await apiCall(token);
+
+  //   if (response.statusCode == 401) {
+  //     // Try refreshing token
+  //     try {
+  //       final newToken = await refreshToken(refreshToken);
+  //       await prefs.setString('token', newToken);
+
+  //       // Retry the API call with new token
+  //       response = await apiCall(newToken);
+  //     } catch (e) {
+  //       Provider.of<AuthProvider>(context, listen: false).logout();
+  //       throw Exception("Session expired. Please log in again.");
+  //     }
+  //   }
+
+  //   return response;
+  // }
 }

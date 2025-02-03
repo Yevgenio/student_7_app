@@ -15,9 +15,9 @@ import 'package:student_7_app/screens/user/user_signup_screen.dart';
 Map<String, WidgetBuilder> appRoutes = {
 
   // '/profile': (context) => ProfileScreen(token: '',),
-  '/login': (context) => const LoginScreen(),
+  // '/login': (context) => const LoginScreen(),
   '/signup': (context) => SignUpScreen(),
-  '/auth-selection': (context) => const AuthSelectionScreen(),
+  '/login': (context) => const AuthSelectionScreen(),
 
   
   '/': (context) => const SharedScaffold(),

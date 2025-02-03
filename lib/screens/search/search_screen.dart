@@ -121,10 +121,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 // const SizedBox(height: 16),
                 Wrap(
                   children: [
-                    const Text(
-                      "סוג תוצאות:",
-                      style: TextStyle(color: AppTheme.primaryColor),
-                    ),
+                    // const Text(
+                    //   "סוג תוצאות:",
+                    //   style: TextStyle(color: AppTheme.primaryColor),
+                    // ),
                     ToggleButtons(
                       isSelected: _selections,
                       onPressed: (index) {

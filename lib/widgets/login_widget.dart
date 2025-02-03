@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_7_app/config.dart';
+import 'package:student_7_app/providers/auth_provider.dart';
 import 'package:student_7_app/services/auth_service.dart';
 import '../../screens/user/user_profile_screen.dart';
 import '../../screens/user/auth_selection_screen.dart';
@@ -24,9 +26,13 @@ class _LoginWidgetState extends State<LoginWidget> {
   }
 
   Future<void> _fetchUsername() async {
+
+    if (username != null) return; // Prevent duplicate calls
+
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     final refreshToken = prefs.getString('refreshToken');
+
     //print('Access Token: ${prefs.getString('token')}');
     //print('Refresh Token: ${prefs.getString('refreshToken')}');
     if (token != null) {
@@ -59,25 +65,17 @@ class _LoginWidgetState extends State<LoginWidget> {
     setState(() {
       username = null;
     });
-    //Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
+
     return GestureDetector(
       onTap: () {
-        if (username == null) {
-            // showDialog<String>(
-            // context: context,
-            // builder: (context) => AlertDialog(
-            //   contentPadding: EdgeInsets.zero,
-            //   // insetPadding: EdgeInsets.zero,
-            //   content: SizedBox(
-            //     width: double.maxFinite,
-            //     child: const AuthSelectionScreen(),
-            //   ),
-            // ),
-            // );
+        if (authProvider.user == null) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AuthSelectionScreen()),
@@ -92,7 +90,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       child: Container(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          username ?? 'התחבר/הרשם',
+          authProvider.user?.username ?? 'התחבר/הרשם',
           style: AppTheme.p,
         ),
       ),

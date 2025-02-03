@@ -28,7 +28,7 @@ class HomeSearch extends StatelessWidget {
             Icon(Icons.search, color: AppTheme.primaryColor),
             SizedBox(width: 8.0),
             Text(
-              'הקלד לחיפוש...',
+              'חיפוש חופשי...',
               style: TextStyle(
                 color: AppTheme.primaryColor,
               ),

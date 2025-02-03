@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'chat_list.dart';
 import '../../config.dart';
 import 'chat_query_item.dart';
 // import 'chat_list.dart'; // Import the new ChatCard file
@@ -62,6 +63,17 @@ class _ChatQueryState extends State<ChatQuery> with AutomaticKeepAliveClientMixi
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatListScreen(query: widget.query),
+                              ),
+                            );
+                          },
+                          child: Text('עוד', style: AppTheme.item),
                         ),
                       ],
                     ),

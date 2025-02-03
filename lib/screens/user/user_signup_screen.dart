@@ -25,7 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       try {
         await authService.signUp(username, email, password);
-        final tokenMap = await authService.login(email, password);
+        final tokenMap = await authService.login(context, email, password);
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', tokenMap['token']!);
