@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                // HomeMemo(),
+                HomeMemoSwiper(),
 
                 HomeSearch(),
 
@@ -88,13 +88,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 16),
 
                 // Chat Section
-                // const SizedBox(height: 8),
                 ChatQuery(title: 'קבוצות חדשות', query: 'sort=recent&limit=10'),
 
-                const SizedBox(height: 16),
-
                 // Deal Section
-                // const SizedBox(height: 8),
                 DealQuery(title: 'הטבות חדשות', query: 'sort=recent&limit=10'),
               ],
             )),

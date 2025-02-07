@@ -1,161 +1,131 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:student_7_app/services/memo_service.dart';
+import 'package:student_7_app/services/image_service.dart';
+import 'package:student_7_app/routes/routes.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:student_7_app/config.dart';
-
-import '../../services/auth_service.dart';
-
-import '../user/user_login_screen.dart';
-import '../user/user_signup_screen.dart';
-import '../user/user_profile_screen.dart';
-
-class HomeMemo extends StatefulWidget {
-  const HomeMemo({Key? key}) : super(key: key);
+class HomeMemoSwiper extends StatefulWidget {
+  const HomeMemoSwiper({Key? key}) : super(key: key);
 
   @override
-  _HomeMemoState createState() => _HomeMemoState();
+  _HomeMemoSwiperState createState() => _HomeMemoSwiperState();
 }
 
-class _HomeMemoState extends State<HomeMemo> {
-  final AuthService authService = AuthService();
-  String? username;
-  bool isLoading = true;
+class _HomeMemoSwiperState extends State<HomeMemoSwiper> {
+  final MemoService memoService = MemoService();
+  List<dynamic> memos = [];
+  int currentIndex = 0;
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    checkLoginStatus();
+    fetchMemos();
+    startAutoScroll();
   }
 
-  Future<void> checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    final refreshToken = prefs.getString('refreshToken');
-    //print('Access Token: ${prefs.getString('token')}');
-    //print('Refresh Token: ${prefs.getString('refreshToken')}');
-    if (token != null) {
-      try {
-        final user = await authService.fetchUserProfile(token);
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+ void startAutoScroll() {
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      if (mounted && memos.isNotEmpty) {
         setState(() {
-          username = user.username;
+          currentIndex = (currentIndex + 1) % memos.length;
         });
-      } catch (e) {
-        if (refreshToken != null) {
-          try {
-            final newToken = await authService.refreshToken(refreshToken);
-            await prefs.setString('token', newToken);
-            final user = await authService.fetchUserProfile(newToken);
-            setState(() {
-              username = user.username;
-            });
-          } catch (refreshError) {
-            logout();
-          }
-        } else {
-          logout();
-        }
       }
+    });
+  }
+
+  Future<void> fetchMemos() async {
+    try {
+      List<dynamic> fetchedMemos = await memoService.fetchMemos();
+      if (mounted) {
+        setState(() {
+          memos = fetchedMemos;
+        });
+      }
+    } catch (e) {
+      print('Error fetching memos: $e');
     }
   }
 
-  void logout() async {
-    authService.logout(context);
-    setState(() {
-      username = null;
-    });
+  void handleMemoTap(BuildContext context, dynamic memo) {
+    if (memo['immediateRedirect'] == true) {
+      navigateToDestination(context, memo);
+    } else {
+      Navigator.pushNamed(
+        context,
+        '/memoLanding',
+        arguments: memo,
+      );
+    }
+  }
+
+  void navigateToDestination(BuildContext context, dynamic memo) {
+    switch (memo['type']) {
+      case 'deal':
+        Navigator.pushNamed(context, '/dealDetails', arguments: memo['targetId']);
+        break;
+      case 'chat':
+        Navigator.pushNamed(context, '/chatDetails', arguments: memo['targetId']);
+        break;
+      case 'external':
+        print('Open external link: ${memo['externalLink']}'); // Add URL launch logic
+        break;
+      case 'blog':
+        Navigator.pushNamed(context, '/memoLanding', arguments: memo);
+        break;
+      default:
+        print('Unknown memo type');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: Center(
+    if (memos.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final memo = memos[currentIndex];
+
+    return GestureDetector(
+      onTap: () => handleMemoTap(context, memo),
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Card(
-              elevation: 0,
-              color: AppTheme.cardColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FutureBuilder<String>(
+                future: ImageService.getProcessedImageUrl(memo['imagePath']),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  return Image.network(snapshot.data!, height: 100, fit: BoxFit.cover);
+                },
               ),
-              child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: username == null
-                      ? Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'ברוכים הבאים, שמחים שבאת!',
-                              style: AppTheme.h2,
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                ElevatedButton.icon(
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginScreen()),
-                                  ),
-                                  icon: const Icon(Icons.login),
-                                  label: const Text('Login'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppTheme.cardColor,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 12),
-                                  ),
-                                ),
-                                ElevatedButton.icon(
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SignUpScreen()),
-                                  ),
-                                  icon: const Icon(Icons.person_add),
-                                  label: const Text('Sign Up'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppTheme.cardColor,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 12),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'שלום, $username!',
-                                style: AppTheme.h2,
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 16),
-                              ElevatedButton.icon(
-                                onPressed: () async {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProfileScreen()),
-                                  );
-                                },
-                                icon: const Icon(Icons.account_circle),
-                                label: const Text('Go to Profile'),
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 12),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )),
-            )),
+              const SizedBox(height: 8),
+              Text(
+                memo['name'],
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                memo['description'],
+                style: const TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
