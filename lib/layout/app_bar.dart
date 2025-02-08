@@ -17,10 +17,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        bottomLeft: Radius.circular(24),
-        bottomRight: Radius.circular(24),
-      ),
+      // borderRadius: const BorderRadius.only(
+      //   bottomLeft: Radius.circular(24),
+      //   bottomRight: Radius.circular(24),
+      // ),
       child: AppBar(
         title: Text(
           title,

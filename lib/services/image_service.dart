@@ -7,11 +7,13 @@ class ImageService {
 
   // Combine constructing the URL and caching it
   static Future<String> getProcessedImageUrl(String? imagePath) async {
-    final fullUrl = (imagePath == null || imagePath.isEmpty)
-        ? '$uploadUrl/default'
-        : '$uploadUrl/$imagePath';
-    print("fullUrl: " + fullUrl);
-    return fullUrl;
+    if (imagePath == null || imagePath.isEmpty) {
+      return '$uploadUrl/default';
+    } else if (Uri.tryParse(imagePath)?.hasAbsolutePath ?? false) {
+      return imagePath;
+    } else {
+      return '$uploadUrl/$imagePath';
+    }
   }
 
   static Future<void> clearCacheForImage(String imageUrl) async {

@@ -5,6 +5,7 @@ import 'package:student_7_app/screens/chat/chat_screen.dart';
 import 'package:student_7_app/screens/deal/deal_details_screen.dart';
 import 'package:student_7_app/screens/deal/deal_screen.dart';
 import 'package:student_7_app/screens/home/home_screen.dart';
+import 'package:student_7_app/screens/memo/memo_details_screen.dart';
 import 'package:student_7_app/screens/search/search_screen.dart';
 import 'package:student_7_app/screens/user/auth_selection_screen.dart';
 import 'package:student_7_app/screens/user/user_profile_screen.dart';
@@ -35,5 +36,10 @@ Map<String, WidgetBuilder> appRoutes = {
   '/chatDetails': (context) {
     final String chatId = ModalRoute.of(context)!.settings.arguments as String;
     return ChatDetailsScreen(chatId: chatId);
+  },
+
+  '/memoDetails': (context) {
+    final String memoId = ModalRoute.of(context)!.settings.arguments as String;
+    return MemoDetailsScreen(memoId: memoId);
   },
 };

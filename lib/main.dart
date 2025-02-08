@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:student_7_app/layout/shared_scaffold.dart';
 import 'package:student_7_app/providers/auth_provider.dart';
 import 'package:student_7_app/routes/routes.dart'; // Import the routes file
-import 'package:student_7_app/layout/app_nav.dart';
 import 'config.dart';
 
 void main() {

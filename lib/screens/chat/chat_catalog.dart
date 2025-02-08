@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:accordion/accordion.dart';
-import 'package:student_7_app/layout/app_nav.dart';
 import '../../services/chat_service.dart';
 import 'chat_details_screen.dart';
 import '../../config.dart';

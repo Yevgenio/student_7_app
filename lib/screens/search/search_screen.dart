@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:student_7_app/layout/app_nav.dart';
 import 'package:student_7_app/services/search_service.dart';
 import 'dart:convert';
 import '../../config.dart';

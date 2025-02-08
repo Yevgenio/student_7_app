@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:student_7_app/layout/app_bar.dart';
-import 'package:student_7_app/layout/app_nav.dart';
 
 import '../../services/deal_service.dart';
 import 'deal_query.dart'; // Import the new DealCard file

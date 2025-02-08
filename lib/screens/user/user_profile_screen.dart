@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_7_app/layout/app_bar.dart';
-import 'package:student_7_app/layout/app_nav.dart';
 import 'package:student_7_app/providers/auth_provider.dart';
 import '../../services/auth_service.dart';
 import '../../models/user_model.dart';
@@ -39,63 +38,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-//   void _checkLoginState() {
-//   if (username == null) {
-//     Navigator.pushReplacement(
-//       context,
-//       MaterialPageRoute(builder: (context) => const AuthSelectionScreen()),
-//     );
-//   }
-// }
-
-  // Future<void> fetchTokenAndUserProfile() async {
+  // Future<void> handleEditProfile() async {
   //   try {
   //     final prefs = await SharedPreferences.getInstance();
-  //     token = prefs.getString('token');
+  //     final token = prefs.getString('token');
+  //     if (token == null) return;
 
-  //     if (token == null) {
-  //       Navigator.pushReplacementNamed(context, '/login');
-  //       return;
-  //     }
+  //     final newSettings = {
+  //       'username': 'Updated Username',
+  //       'email': 'updatedemail@example.com',
+  //       // Add other fields if needed
+  //     };
 
-  //     final fetchedUser = await authService.fetchUserProfile(token!);
-  //     setState(() {
-  //       user = fetchedUser;
-  //       isLoading = false;
-  //     });
-  //   } catch (e) {
-  //     // Handle errors and redirect
+  //     await authService.updateUserSettings(token, newSettings);
+
   //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text('Failed to load profile')),
+  //       const SnackBar(content: Text('Profile updated successfully')),
   //     );
-  //     Navigator.pushReplacementNamed(context, '/login');
+  //     // fetchTokenAndUserProfile();
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Failed to update profile')),
+  //     );
   //   }
   // }
-
-  Future<void> handleEditProfile() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
-      if (token == null) return;
-
-      final newSettings = {
-        'username': 'Updated Username',
-        'email': 'updatedemail@example.com',
-        // Add other fields if needed
-      };
-
-      await authService.updateUserSettings(token, newSettings);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile updated successfully')),
-      );
-      // fetchTokenAndUserProfile();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to update profile')),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,14 +103,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         CircleAvatar(
                           radius: 50,
-                          backgroundImage: NetworkImage(user!.avatar),
+                          backgroundImage: NetworkImage(user.avatar),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
                     // Username Section
                     Text(
-                      user!.username,
+                      user.username,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -153,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      user!.email,
+                      user.email,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
@@ -161,13 +127,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 20),
                     // Role Section
-                    if (user!.role == "admin")
+                    if (user.role == "admin")
                       const Chip(
                         label: Text(
                           'אדמין',
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white),
                         ),
-                        backgroundColor: const Color(0xFF39A7EE),
+                        backgroundColor: Color(0xFF39A7EE),
                       ),
                     const SizedBox(height: 20),
                     // Action Buttons
@@ -175,24 +141,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Column(
                         children: [
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              // Handle Edit Profile
-                            },
-                            icon: const Icon(Icons.edit),
-                            label: const Text('עריכת פרופיל'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF19276F),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 12,
-                                horizontal: 16,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
+                          // ElevatedButton.icon(
+                          //   onPressed: () {
+                          //     // Handle Edit Profile
+                          //   },
+                          //   icon: const Icon(Icons.edit),
+                          //   label: const Text('עריכת פרופיל'),
+                          //   style: ElevatedButton.styleFrom(
+                          //     backgroundColor: const Color(0xFF19276F),
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(8),
+                          //     ),
+                          //     padding: const EdgeInsets.symmetric(
+                          //       vertical: 12,
+                          //       horizontal: 16,
+                          //     ),
+                          //   ),
+                          // ),
+                          // const SizedBox(height: 10),
                           OutlinedButton.icon(
                             onPressed: () {
                               authService.logout(context);

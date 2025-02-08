@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_7_app/config.dart';
 import 'package:student_7_app/layout/app_drawer.dart';
-import 'package:student_7_app/layout/app_nav.dart';
-import 'package:student_7_app/screens/chat/chat_screen.dart';
-import 'package:student_7_app/screens/home/home_mininav.dart';
 import 'package:student_7_app/screens/home/home_search.dart';
+import 'package:student_7_app/screens/memo/memo_swiper_widget.dart';
 import 'package:student_7_app/widgets/login_widget.dart';
-import 'home_memo.dart';
 import '../../layout/app_bar.dart';
 
 import '../../services/chat_service.dart';
 import '../../services/deal_service.dart';
-import '../../services/auth_service.dart';
 
 import '../deal/deal_query.dart';
 import '../chat/chat_query.dart';
-
-import '../user/user_login_screen.dart';
-import '../user/user_signup_screen.dart';
-import '../user/user_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -72,20 +63,19 @@ class _HomeScreenState extends State<HomeScreen> {
       // drawer: AppDrawer(),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+          : const SingleChildScrollView(
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                HomeMemoSwiper(),
+                MemoSwiperWidget(),
+                SizedBox(height: 16),
 
-                HomeSearch(),
-
-                const SizedBox(height: 16),
-
-                HomeMiniNav(),
-
-                const SizedBox(height: 16),
+                // HomeSearch(),
+                //const MemoWidget(),
+                // const SizedBox(height: 16),
+                // HomeMiniNav(),
+                // const SizedBox(height: 16),
 
                 // Chat Section
                 ChatQuery(title: 'קבוצות חדשות', query: 'sort=recent&limit=10'),

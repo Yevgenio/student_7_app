@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:student_7_app/config.dart';
 import 'package:student_7_app/layout/app_icons.dart';
-import 'package:student_7_app/layout/app_nav.dart';
+// import 'package:student_7_app/layout/app_nav.dart';
 import 'package:student_7_app/models/user_model.dart';
 import 'package:student_7_app/providers/auth_provider.dart';
 import 'package:student_7_app/routes/routes.dart';
@@ -11,6 +12,7 @@ import 'package:student_7_app/screens/chat/chat_details_screen.dart';
 import 'package:student_7_app/screens/deal/deal_catalog.dart';
 import 'package:student_7_app/screens/deal/deal_details_screen.dart';
 import 'package:student_7_app/screens/home/home_screen.dart';
+import 'package:student_7_app/screens/memo/memo_details_screen.dart';
 import 'package:student_7_app/screens/search/search_screen.dart';
 import 'package:student_7_app/screens/user/auth_selection_screen.dart';
 import 'package:student_7_app/screens/user/user_profile_screen.dart';
@@ -84,17 +86,27 @@ class _SharedScaffoldState extends State<SharedScaffold> {
               builder: (context) => ChatDetailsScreen(chatId: chatId),
             );
           }
+
           if (settings.name == '/dealDetails') {
             final dealId = settings.arguments as String;
             return MaterialPageRoute(
               builder: (context) => DealDetailsScreen(dealId: dealId),
             );
           }
+
+          if (settings.name == '/memoDetails') {
+            final memoId = settings.arguments as String;
+            return MaterialPageRoute(
+              builder: (context) => MemoDetailsScreen(memoId: memoId),
+            );
+          }
+
           if (settings.name == '/login') {
             return MaterialPageRoute(
               builder: (context) => AuthSelectionScreen(),
             );
           }
+
           Widget route;
           switch (index) {
             case 0:
@@ -167,41 +179,43 @@ Widget build(BuildContext context) {
   ];
   
   return WillPopScope(
-      onWillPop: () async {
+    onWillPop: () async {
       final isFirstRouteInCurrentTab =
-        !await _navigatorKeys[_selectedIndex].currentState!.maybePop();
+          !await _navigatorKeys[_selectedIndex].currentState!.maybePop();
       if (isFirstRouteInCurrentTab) {
         if (_selectedIndex != 0) {
-        setState(() {
-          _selectedIndex = 0;
-        });
-        return false; // Prevent default back navigation
+          setState(() {
+            _selectedIndex = 0;
+          });
+          return false; // Prevent default back navigation
         }
         return true; // Allow default back navigation for the home tab
       }
       return false; // Prevent default back navigation
-      },
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Scaffold(
-          // appBar: AppBar(
-          //   title: Text(_titles[_selectedIndex]),
-          // ),
-          body: Stack(
-            children: List.generate(
-              5,
-              (index) => _buildOffstageNavigator(index),
-            ),
-          ),
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (int index) {
-              _onTabTapped(index);
-            },
-            destinations: destinations,
+    },
+    child: Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        // appBar: AppBar(
+        //   title: Text(_titles[_selectedIndex]),
+        // ),
+        body: Stack(
+          children: List.generate(
+            5,
+            (index) => _buildOffstageNavigator(index),
           ),
         ),
+        bottomNavigationBar: NavigationBar(
+          backgroundColor: AppTheme.cardColor, // Set the background color to white
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: (int index) {
+            _onTabTapped(index);
+          },
+          destinations: destinations,
+          indicatorColor: Colors.transparent, // Set the selected color to transparent
+        ),
       ),
-    );
+    ),
+  );
   }
 }

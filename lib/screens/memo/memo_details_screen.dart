@@ -4,20 +4,20 @@ import 'package:student_7_app/config.dart';
 import 'package:student_7_app/layout/app_bar.dart';
 import 'package:student_7_app/widgets/cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../services/chat_service.dart'; // Replace with your actual path
+import '../../services/memo_service.dart'; // Replace with your actual path
 
-class ChatDetailsScreen extends StatefulWidget {
-  final String chatId;
+class MemoDetailsScreen extends StatefulWidget {
+  final String memoId;
 
-  ChatDetailsScreen({required this.chatId});
+  MemoDetailsScreen({required this.memoId});
 
   @override
-  _ChatDetailsScreenState createState() => _ChatDetailsScreenState();
+  _MemoDetailsScreenState createState() => _MemoDetailsScreenState();
 }
 
-class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
-  final ChatService chatService = ChatService();
-  Map<String, dynamic>? chatDetails;
+class _MemoDetailsScreenState extends State<MemoDetailsScreen> {
+  final MemoService memoService = MemoService();
+  Map<String, dynamic>? memoDetails;
   bool isLoading = true;
 
   @override
@@ -28,9 +28,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   Future<void> fetchGroupDetails() async {
     try {
-      final data = await chatService.fetchChatById(widget.chatId);
+      final data = await memoService.fetchMemoById(widget.memoId);
       setState(() {
-        chatDetails = data;
+        memoDetails = data;
         isLoading = false;
       });
     } catch (e) {
@@ -44,12 +44,12 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomAppBar(
-          title: 'פרטי הקבוצה',
+        appBar: CustomAppBar(
+          title: memoDetails?['name'] ?? 'פרטי הכרזה',
         ),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
-            : chatDetails != null
+            : memoDetails != null
                 ? SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -58,11 +58,11 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Constrain the image size
-                          if (chatDetails!['imagePath'] != null)
+                          if (memoDetails!['imagePath'] != null)
                             ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: CachedImage(
-                                imagePath: chatDetails!['imagePath'],
+                                imagePath: memoDetails!['imagePath'],
                                 fit: BoxFit.cover,
                                 height: 200, // Set a maximum height
                                 width: double.infinity,
@@ -70,15 +70,15 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                             ),
                           SizedBox(height: 16), // Add spacing
                           Text(
-                            chatDetails!['name'],
+                            memoDetails!['name'],
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 16),
-                          if (chatDetails!['category'] != null && chatDetails!['category']!.trim().isNotEmpty)
+                          if (memoDetails!['category'] != null && memoDetails!['category']!.trim().isNotEmpty)
                             Chip(
                               label: Text(
-                                chatDetails!['category'],
+                                memoDetails!['category'],
                                 style: AppTheme.label,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
@@ -86,12 +86,12 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                               backgroundColor: AppTheme.secondaryColor.withOpacity(0.2),
                             ),
                           SizedBox(height: 8),
-                          _buildDescription(chatDetails!['description'] ?? ''),
+                          _buildDescription(memoDetails!['description'] ?? ''),
                           SizedBox(height: 16),
                           Center(
                             child: ElevatedButton(
                               onPressed: () {
-                                openWhatsApp(chatDetails!['link']);
+                                openWhatsApp(memoDetails!['link']);
                               },
                               child: Text('הצטרף לקבוצה'),
                             ),

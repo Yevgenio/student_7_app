@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_7_app/config.dart';
 import '../../services/auth_service.dart';
-// import '../home/home_screen.dart';
-import '../../layout/app_nav.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 

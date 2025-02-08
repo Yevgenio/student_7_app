@@ -28,7 +28,7 @@ class ChatService {
       data['imagePath'] = await ImageService.getProcessedImageUrl(data['imagePath']);
 
       if (data['category'] != null) {
-          data['barcodePath'] = 'כללי';
+          data['category'] = 'כללי';
       }
       return data;
     } else {
