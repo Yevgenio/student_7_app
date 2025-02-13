@@ -16,7 +16,7 @@ class ChatQueryItem extends StatelessWidget {
     required this.description,
     required this.chatId,
     this.width = 200, // Default width
-    this.height = 100, // Default height
+    this.height = 50, // Default height
     Key? key,
   }) : super(key: key);
 
@@ -67,7 +67,7 @@ class ChatQueryItem extends StatelessWidget {
                         name,
                         style: AppTheme.label,
                         overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
+                        maxLines: 1,
                       ),
                     ],
                   ),

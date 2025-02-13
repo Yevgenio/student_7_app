@@ -52,14 +52,28 @@ android {
         versionName flutterVersionName
     }
     
+    // signingConfigs {
+    //     release {
+    //         storeFile file("student-7-release-key.jks")
+    //         storePassword project.KEYSTORE_PASSWORD
+    //         keyAlias "student7ReleaseKey"
+    //         keyPassword project.KEY_PASSWORD
+    //     }
+    // }   
+    def keystoreProperties = new Properties()
+    def keystorePropertiesFile = rootProject.file("key.properties")
+    if (keystorePropertiesFile.exists()) {
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    }
+
     signingConfigs {
         release {
-            storeFile file("C:/Users/Yevgeni/My Drive/Development/ks/student-7/student-7-release-key.jks")
-            storePassword project.KEYSTORE_PASSWORD
-            keyAlias "student7ReleaseKey"
-            keyPassword project.KEY_PASSWORD
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
-    }   
+    }
 
     buildTypes {
         release {
