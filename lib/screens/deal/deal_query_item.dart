@@ -48,41 +48,32 @@ class DealQueryItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Top Section: Image
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                child: CachedImage(
-                  imagePath: imageUrl,
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+              Flexible(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  child: CachedImage(
+                    imagePath: imageUrl,
+                    height: 120,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               // Bottom Section: Text
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 6, left: 6, top: 4),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Deal Name
-                      Text(
-                        name,
-                        style: AppTheme.label,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                      const SizedBox(height: 4),
-                      // Deal Description
-                      Text(
-                        description,
-                        style: AppTheme.p,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ],
-                  ),
-                ),
+              const SizedBox(height: 4),
+              Text(
+                name,
+                style: AppTheme.label,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+              const SizedBox(height: 4),
+              // Deal Description
+              Text(
+                description,
+                style: AppTheme.p,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ],
           ),

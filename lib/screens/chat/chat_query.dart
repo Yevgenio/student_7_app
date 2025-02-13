@@ -9,13 +9,15 @@ class ChatQuery extends StatefulWidget {
   final String title;
   final String query;
 
-  const ChatQuery({required this.title, required this.query, Key? key}) : super(key: key);
+  const ChatQuery({required this.title, required this.query, Key? key})
+      : super(key: key);
 
   @override
   _ChatQueryState createState() => _ChatQueryState();
 }
 
-class _ChatQueryState extends State<ChatQuery> with AutomaticKeepAliveClientMixin  {
+class _ChatQueryState extends State<ChatQuery>
+    with AutomaticKeepAliveClientMixin {
   final ChatService chatService = ChatService();
   List<dynamic> chats = [];
   bool isLoading = true;
@@ -43,63 +45,62 @@ class _ChatQueryState extends State<ChatQuery> with AutomaticKeepAliveClientMixi
 
   @override
   Widget build(BuildContext context) {
-        return isLoading
+    return isLoading
         ? const Center(child: CircularProgressIndicator())
         : chats.isEmpty
             ? const Center(child: Text('אין קבוצות'))
-            : Padding(
-                padding: const EdgeInsets.all(AppTheme.itemPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Category Title
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            widget.title,
-                            style: AppTheme.label,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Category Title
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          widget.title,
+                          style: AppTheme.label,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChatListScreen(query: widget.query),
-                              ),
-                            );
-                          },
-                          child: Text('עוד', style: AppTheme.item),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: AppTheme.itemPadding),
-                    // Horizontal Chats List
-                    SizedBox(
-                      height: 100,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: chats.length,
-                        itemBuilder: (context, index) {
-                          final chat = chats[index];
-                          return ChatQueryItem(
-                            imageUrl: chat['imagePath'] ?? 'default',
-                            name: chat['name'] ?? 'New Chat',
-                            description: chat['description'] ?? '',
-                            chatId: chat['_id'],
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ChatListScreen(query: widget.query),
+                            ),
                           );
                         },
+                        child: Text('עוד', style: AppTheme.item),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: AppTheme.itemPadding),
+                  // Horizontal Chats List
+                  SizedBox(
+                    height: 64,
+                    width: MediaQuery.of(context).size.width,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: chats.length,
+                      itemBuilder: (context, index) {
+                        final chat = chats[index];
+                        return ChatQueryItem(
+                          imageUrl: chat['imagePath'] ?? 'default',
+                          name: chat['name'] ?? 'New Chat',
+                          description: chat['description'] ?? '',
+                          chatId: chat['_id'],
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               );
   }
-  
+
   @override
   bool get wantKeepAlive => true;
 }
