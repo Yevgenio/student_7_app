@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:student_7_app/widgets/card_widget.dart';
 import '../../layout/app_bar.dart';
 
 import '../../services/deal_service.dart';
-import 'deal_list_item.dart';
 
 class DealListScreen extends StatefulWidget {
   final String query;
@@ -32,7 +32,6 @@ class _DealListScreenState extends State<DealListScreen> {
         isLoading = false;
       });
     } catch (e) {
-      print('Error fetching deals: $e');
       setState(() {
         isLoading = false;
       });
@@ -42,18 +41,19 @@ class _DealListScreenState extends State<DealListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'כל ההטבות'),
+      appBar: const CustomAppBar(title: 'כל ההטבות'),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: deals.length,
               itemBuilder: (context, index) {
                 final deal = deals[index];
-                return DealListItem(
+                return CardWidget(
                   imageUrl: deal['imagePath'] ?? 'default',
                   name: deal['name'] ?? 'New Deal',
                   description: deal['description'] ?? 'Student 7',
-                  dealId: deal['_id'],
+                  itemId: deal['_id'],
+                  navigatorRoute: '/dealDetails',
                 );
               },
             ),

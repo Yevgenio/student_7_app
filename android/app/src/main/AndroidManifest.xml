@@ -25,7 +25,7 @@
 
             <meta-data
                 android:name="com.google.android.gms.client_id"
-                android:value="148902254409-uq64ellll31au13423122frfb7cjalnd.apps.googleusercontent.com" />
+                android:value="148902254409-sbgjtv0iah4b9duldq2s41rsqoge9fne.apps.googleusercontent.com" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

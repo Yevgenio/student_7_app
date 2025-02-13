@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:student_7_app/widgets/card_widget.dart';
 import '../../layout/app_bar.dart';
-
 import '../../services/chat_service.dart';
-import 'chat_list_item.dart';
 
 class ChatListScreen extends StatefulWidget {
   final String query;
@@ -49,11 +48,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
               itemCount: chats.length,
               itemBuilder: (context, index) {
                 final chat = chats[index];
-                return ChatListItem(
+                return CardWidget(
                   imageUrl: chat['imagePath'] ?? 'default',
                   name: chat['name'] ?? 'New Chat',
                   description: chat['description'] ?? 'Student 7',
-                  chatId: chat['_id'],
+                  itemId: chat['_id'],
+                  navigatorRoute: '/chatDetails',
                 );
               },
             ),
