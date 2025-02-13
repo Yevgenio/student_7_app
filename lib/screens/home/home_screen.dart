@@ -67,7 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 MemoSwiperWidget(),
                 SizedBox(height: 16),
 
@@ -88,5 +87,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-

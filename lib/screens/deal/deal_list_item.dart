@@ -31,34 +31,43 @@ class DealListItem extends StatelessWidget {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.all(6),
-        child: Container(
-          width: width,
-          height: height,
-          margin: const EdgeInsets.only(left: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-          decoration: BoxDecoration(
-            color: AppTheme.cardColor,
-            boxShadow: [AppTheme.primaryShadow],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Top Section: Image
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                child: CachedImage(
-                  imagePath: imageUrl,
-                  height: 150,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+        padding: const EdgeInsets.all(14),
+        child: AspectRatio(
+          aspectRatio: 1.5,
+          child: Container(
+            // width: MediaQuery.of(context).size.width,
+            // height: MediaQuery.of(context).size.width - 28,
+            // margin: const EdgeInsets.only(left: 8),
+            // padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+            decoration: BoxDecoration(
+              color: AppTheme.cardColor,
+              boxShadow: [AppTheme.primaryShadow],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Top Section: Image
+                Expanded(
+                  child: Container(
+                    color: const Color.fromARGB(0, 0, 0, 0),
+                    child: ClipRRect(
+                      // borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.red)),
+                        child: CachedImage(
+                          imagePath: imageUrl,
+                          width: MediaQuery.of(context).size.width,
+                          // fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              // Bottom Section: Text
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 6, left: 6, top: 4),
+                // Bottom Section: Text
+                Padding(
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -81,8 +90,8 @@ class DealListItem extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

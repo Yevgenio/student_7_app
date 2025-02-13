@@ -33,20 +33,19 @@ class ChatQueryItem extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(6),
         child: Container(
-          width: width,
+          // width: width,
           height: height,
-          margin: const EdgeInsets.only(left: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+          // margin: const EdgeInsets.only(left: 8),
+          // padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           decoration: BoxDecoration(
             color: AppTheme.cardColor,
             boxShadow: [AppTheme.primaryShadow],
             borderRadius: BorderRadius.circular(48),
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AspectRatio(
-                aspectRatio: 1,  // Ensures 1:1 ratio for perfect circle
+                aspectRatio: 1,
                 child: ClipOval(
                   child: CachedImage(
                     imagePath: imageUrl,
@@ -55,22 +54,13 @@ class ChatQueryItem extends StatelessWidget {
                 ),
               ),
               // Text Section
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 6, left: 6),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Chat Name
-                      Text(
-                        name,
-                        style: AppTheme.label,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ],
-                  ),
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  name,
+                  style: AppTheme.label,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
             ],
