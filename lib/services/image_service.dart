@@ -9,7 +9,7 @@ class ImageService {
   static Future<String> getProcessedImageUrl(String? imagePath) async {
     if (imagePath == null || imagePath.isEmpty) {
       return '$uploadUrl/default';
-    } else if (Uri.tryParse(imagePath)?.hasAbsolutePath ?? false) {
+    } if (imagePath.startsWith('http')) {
       return imagePath;
     } else {
       return '$uploadUrl/$imagePath';

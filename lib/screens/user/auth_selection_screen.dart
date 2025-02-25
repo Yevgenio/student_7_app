@@ -24,7 +24,7 @@ class _AuthSelectionScreenState extends State<AuthSelectionScreen> {
   Future<void> _loginWithGoogle(BuildContext context) async {
     final GoogleSignIn googleSignIn = GoogleSignIn(
       serverClientId:
-          '148902254409-nmmr59v0ubvjl1118hks8qu33a99c4a4.apps.googleusercontent.com', // Use your web client ID
+        '148902254409-nmmr59v0ubvjl1118hks8qu33a99c4a4.apps.googleusercontent.com', // Use your web client ID
     );
     setState(() {
       _isLoading = true;

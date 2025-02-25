@@ -24,7 +24,7 @@
                 android:value="true" />
 
             <meta-data
-                android:name="com.google.android.gms.client_id"
+                android:name="com.google.android.gms.auth.api.signin.CLIENT_ID"
                 android:value="148902254409-sbgjtv0iah4b9duldq2s41rsqoge9fne.apps.googleusercontent.com" />
 
             <intent-filter>

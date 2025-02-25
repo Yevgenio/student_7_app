@@ -20,7 +20,7 @@ class User {
       username: json['username'] ?? 'Guest',
       email: json['email'] ?? 'N/A',
       avatar: json['avatar'] != null
-          ? '$uploadUrl/${json['avatar']}' // Construct full URL if avatar exists
+          ? (json['avatar'].startsWith('http') ? json['avatar'] : '$uploadUrl/${json['avatar']}') // Check if avatar is a URL
           : '$uploadUrl/default', // Default placeholder
       role: json['role'] ?? 'user', // Default role is 'user'
     );
